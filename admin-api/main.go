@@ -1,6 +1,6 @@
 package main
 
-import util "/admin-api/util/config.go"
+import "github.com/Xebec19/e-commerce-admin/admin-api/util"
 
 func main() {
 	config, err := util.LoadConfig(".")
