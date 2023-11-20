@@ -1,0 +1,7 @@
+development:
+  dialect: postgres
+  url: "postgresql://postgres:root@127.0.0.1:5432/e_commerce"
+  pool: 5
+
+production:
+  url: "postgresql://postgres:root@127.0.0.1:5432/e_commerce"
