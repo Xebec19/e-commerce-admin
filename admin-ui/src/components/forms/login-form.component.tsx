@@ -19,7 +19,12 @@ export default function LoginForm() {
     resolver: zodResolver(LoginSchema),
   });
 
-  const onSubmit = (data: LoginFormType) => console.log(data);
+  const onSubmit = (data: LoginFormType) => {
+    const payload = {
+      email: data.email,
+      password: btoa(data.password),
+    };
+  };
 
   return (
     <form

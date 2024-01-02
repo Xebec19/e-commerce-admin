@@ -11,14 +11,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type registerSchema struct {
-	FirstName string `json:"first_name" binding:"required"`
-	LastName  string `json:"last_name"`
-	Email     string `json:"email" binding:"required,email"`
-	Phone     string `json:"phone"`
-	Password  string `json:"password" binding:"required,min=8"`
-}
-
 type loginSchema struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=8"`
