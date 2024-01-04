@@ -5,8 +5,12 @@ import { LoginSchema } from "@/schema/login.schema";
 import { LoginFormType } from "@/types/form.type";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { useToast } from "../ui/use-toast";
+import { loginAPI } from "@/lib/http/auth";
 
 export default function LoginForm() {
+  const { toast } = useToast();
+
   const {
     control,
     handleSubmit,
@@ -19,11 +23,21 @@ export default function LoginForm() {
     resolver: zodResolver(LoginSchema),
   });
 
-  const onSubmit = (data: LoginFormType) => {
-    const payload = {
-      email: data.email,
-      password: btoa(data.password),
-    };
+  const onSubmit = async (data: LoginFormType) => {
+    try {
+      const payload = {
+        email: data.email,
+        password: btoa(data.password),
+      };
+      let response = await loginAPI(payload);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: error.message,
+      });
+    }
   };
 
   return (

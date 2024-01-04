@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/Xebec19/e-commerce-admin/admin-api/auth"
 	db "github.com/Xebec19/e-commerce-admin/admin-api/db/sqlc"
 	"github.com/Xebec19/e-commerce-admin/admin-api/util"
 	"github.com/gofiber/fiber/v2"
@@ -17,15 +18,11 @@ func main() {
 
 	app := fiber.New()
 
-	app.Use(cors.New(cors.Config{
-		AllowHeaders:     "Origin,Content-Type,Accept,Content-Length,Accept-Language,Accept-Encoding,Connection,Access-Control-Allow-Origin,Authorization",
-		AllowOrigins:     "*",
-		AllowCredentials: true,
-		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
-	}))
+	app.Use(cors.New())
 
 	db.Connect()
 
+	auth.SetRoute(app)
 	app.Use(util.JwtValidate)
 
 	log.Printf("Server listening on %v", config.ServerAddress)
