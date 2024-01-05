@@ -1,0 +1,1 @@
+alter table orders add column discount_amount integer;

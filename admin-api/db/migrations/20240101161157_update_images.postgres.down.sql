@@ -1,0 +1,3 @@
+UPDATE product_images SET image_url = 'https://ecommerce-rohan-admin.s3.ap-south-1.amazonaws.com/aiony-haust-3TLl_97HNJo-unsplash.jpg' WHERE image_url = 'https://ecommerce-rohan-admin.s3.ap-south-1.amazonaws.com/jacket-1.jpeg' ;
+
+delete from product_images where image_url = 'https://ecommerce-rohan-admin.s3.ap-south-1.amazonaws.com/jacket-3.jpeg' or image_url = 'https://ecommerce-rohan-admin.s3.ap-south-1.amazonaws.com/jacket-2.jpeg';
