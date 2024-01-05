@@ -26,3 +26,5 @@ drop type if exists enum_access;
 drop type if exists enum_type;
 
 drop type if exists enum_gender;
+
+drop type if exists enum_order_status;

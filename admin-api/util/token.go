@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/google/uuid"
 )
 
 var (
@@ -15,7 +14,7 @@ var (
 )
 
 // CreateToken expects email of user and generates a jwt token
-func CreateToken(userid uuid.UUID, duration time.Duration) (string, error) {
+func CreateToken(userid int32, duration time.Duration) (string, error) {
 
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"Userid":    userid,

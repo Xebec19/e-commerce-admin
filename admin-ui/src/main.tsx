@@ -7,8 +7,8 @@ import { ThemeProvider } from "./stores/theme.provider";
 import Root from "./routes/root";
 import Login from "./routes/auth/login.page";
 import AppProvider from "./stores/app.provider";
-import CreateCategoriesPage from "./routes/categories/create-categories.page";
-import CreateProduct from "./routes/products/create-product";
+import CreateCategoriesPage from "./routes/dashboard/categories/create-categories.page";
+import CreateProduct from "./routes/dashboard/products/create-product";
 
 const router = createBrowserRouter([
   {
@@ -26,20 +26,25 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "category",
+        path: "dashboard",
         children: [
           {
-            path: "create",
-            element: <CreateCategoriesPage />,
+            path: "category",
+            children: [
+              {
+                path: "create",
+                element: <CreateCategoriesPage />,
+              },
+            ],
           },
-        ],
-      },
-      {
-        path: "product",
-        children: [
           {
-            path: "create",
-            element: <CreateProduct />,
+            path: "product",
+            children: [
+              {
+                path: "create",
+                element: <CreateProduct />,
+              },
+            ],
           },
         ],
       },
