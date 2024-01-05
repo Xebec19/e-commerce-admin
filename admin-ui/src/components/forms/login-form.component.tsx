@@ -7,9 +7,13 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
 import { loginAPI } from "@/lib/http/auth";
+import { AxiosError } from "axios";
+import LocalStorage from "@/lib/local-storage.util";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const {
     control,
@@ -29,13 +33,27 @@ export default function LoginForm() {
         email: data.email,
         password: btoa(data.password),
       };
-      let response = await loginAPI(payload);
+      const response = await loginAPI(payload);
+      if (!response.data.status) {
+        throw new Error(response.data.message);
+      }
+      toast({
+        title: "Success",
+        description: "User logged in successfully",
+      });
+      const token = response.data.payload + "";
+      LocalStorage.token = token;
+      navigate("/dashboard");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
+      let errorMessage = error.message;
+      if (error instanceof AxiosError) {
+        errorMessage = error.response?.data?.message;
+      }
       toast({
         variant: "destructive",
-        title: "Something went wrong",
-        description: error.message,
+        title: "Something went wrong!",
+        description: errorMessage,
       });
     }
   };
@@ -43,7 +61,7 @@ export default function LoginForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-4 space-y-4 rounded-lg border bg-white hover:border-blue-600 dark:bg-black relative border-neutral-200 dark:border-neutral-800"
+      className="p-4 space-y-4 rounded-lg border hover:border-blue-600 relative border-neutral-200 dark:border-neutral-800"
     >
       <div className="flex flex-col space-y-2">
         <Label htmlFor="email">Email</Label>
@@ -69,7 +87,7 @@ export default function LoginForm() {
         )}
       </div>
 
-      <Button variant="outline" type="submit" className="w-full">
+      <Button type="submit" className="min-w-[11rem]">
         Submit
       </Button>
     </form>

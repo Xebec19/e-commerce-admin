@@ -4,15 +4,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
 
 func TestJWTMaker(t *testing.T) {
-	id, _ := uuid.NewRandom()
+	id := RandomNumber(10)
 	duration := time.Minute
 
-	token, err := CreateToken(uuid.UUID(id), duration)
+	token, err := CreateToken(int32(id), duration)
 	require.NoError(t, err)
 	require.NotEmpty(t, token)
 
