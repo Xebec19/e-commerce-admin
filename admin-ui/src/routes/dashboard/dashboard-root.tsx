@@ -2,7 +2,7 @@ import Navbar from "@/components/layout/navbar.component";
 import { Toaster } from "@/components/ui/toaster";
 import { Outlet } from "react-router-dom";
 
-export default function Root() {
+export default function DashboardRoot() {
   return (
     <>
       <Navbar />
