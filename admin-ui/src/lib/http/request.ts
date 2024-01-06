@@ -39,9 +39,8 @@ requestAPI.interceptors.response.use(
 
         window.location.replace("/auth/login");
       }
-
-      return Promise.reject(error);
     }
+    return Promise.reject(error);
   }
 );
 

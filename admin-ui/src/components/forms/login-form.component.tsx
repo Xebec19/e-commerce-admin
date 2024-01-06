@@ -34,19 +34,19 @@ export default function LoginForm() {
         password: btoa(data.password),
       };
       const response = await loginAPI(payload);
-      if (!response.data.status) {
+      if (!response?.data?.status) {
         throw new Error(response.data.message);
       }
       toast({
         title: "Success",
         description: "User logged in successfully",
       });
-      const token = response.data.payload + "";
+      const token = response?.data?.payload + "";
       LocalStorage.token = token;
       navigate("/dashboard");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      let errorMessage = error.message;
+      let errorMessage = error?.message;
       if (error instanceof AxiosError) {
         errorMessage = error.response?.data?.message;
       }

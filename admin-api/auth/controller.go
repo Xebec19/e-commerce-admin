@@ -28,30 +28,25 @@ func login(c *fiber.Ctx) error {
 	// Find a user with given email
 	user, err := db.DBQuery.FindAdminUser(context.Background(), req.Email)
 	if err != nil {
-		c.Status(fiber.StatusNotFound).JSON(util.ErrorResponse(errors.New("no user found")))
-		return err
+		return c.Status(fiber.StatusNotFound).JSON(util.ErrorResponse(errors.New("no user found")))
 	}
 
 	// decode base64 hash
 	req.Password, err = util.DecryptBase64(req.Password)
 	if err != nil {
-		c.Status(fiber.StatusNotFound).JSON(util.ErrorResponse(err))
-		return err
+		return c.Status(fiber.StatusNotFound).JSON(util.ErrorResponse(err))
 	}
 
 	// check user password
 	err = util.CheckPassword(req.Password, user.Password)
 	if err != nil {
-		c.Status(fiber.StatusNotFound).JSON(util.ErrorResponse(errors.New("invalid password")))
-		return err
+		return c.Status(fiber.StatusNotFound).JSON(util.ErrorResponse(errors.New("invalid password")))
 	}
 
 	// generate token to user
 	token, err := util.CreateToken(user.UserID, 24*time.Hour)
 	if err != nil {
-		c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
-		return err
+		return c.Status(fiber.StatusInternalServerError).JSON(util.ErrorResponse(err))
 	}
-	c.Status(fiber.StatusCreated).JSON(util.SuccessResponse(token, "User logged in"))
-	return nil
+	return c.Status(fiber.StatusCreated).JSON(util.SuccessResponse(token, "User logged in"))
 }
