@@ -22,7 +22,7 @@ func (q *Queries) CountUser(ctx context.Context, lower string) (int64, error) {
 
 const findAdminUser = `-- name: FindAdminUser :one
 SELECT user_id, email, CONCAT(first_name, ' ', last_name) AS user_name, password FROM USERS u 
-WHERE lower(u.EMAIL) = lower($1)
+WHERE lower(u.EMAIL) = lower($1) AND access = 'admin'
 `
 
 type FindAdminUserRow struct {
@@ -65,4 +65,72 @@ func (q *Queries) ReadUser(ctx context.Context, userID int32) (User, error) {
 		&i.Access,
 	)
 	return i, err
+}
+
+const readUserCountDaywise = `-- name: ReadUserCountDaywise :many
+select to_char(date_trunc('day',created_on), 'YYYY-MM-DD') as day, count(*) as total_users from users 
+where created_on >= CURRENT_DATE - INTERVAL '4 months'
+group by date_trunc('day',created_on)
+`
+
+type ReadUserCountDaywiseRow struct {
+	Day        string `json:"day"`
+	TotalUsers int64  `json:"total_users"`
+}
+
+func (q *Queries) ReadUserCountDaywise(ctx context.Context) ([]ReadUserCountDaywiseRow, error) {
+	rows, err := q.db.QueryContext(ctx, readUserCountDaywise)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ReadUserCountDaywiseRow
+	for rows.Next() {
+		var i ReadUserCountDaywiseRow
+		if err := rows.Scan(&i.Day, &i.TotalUsers); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const readUserCountMonthwise = `-- name: ReadUserCountMonthwise :many
+select to_char(date_trunc('month',created_on), 'MM') as month, count(*) as total_users from users 
+where extract(year from created_on) = extract(year from current_date)
+group by date_trunc('month',created_on)
+`
+
+type ReadUserCountMonthwiseRow struct {
+	Month      string `json:"month"`
+	TotalUsers int64  `json:"total_users"`
+}
+
+func (q *Queries) ReadUserCountMonthwise(ctx context.Context) ([]ReadUserCountMonthwiseRow, error) {
+	rows, err := q.db.QueryContext(ctx, readUserCountMonthwise)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ReadUserCountMonthwiseRow
+	for rows.Next() {
+		var i ReadUserCountMonthwiseRow
+		if err := rows.Scan(&i.Month, &i.TotalUsers); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
