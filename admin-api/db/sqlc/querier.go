@@ -13,8 +13,12 @@ type Querier interface {
 	DeleteOneProduct(ctx context.Context) error
 	FindAdminUser(ctx context.Context, lower string) (FindAdminUserRow, error)
 	ReadOneProduct(ctx context.Context, productID int32) (ReadOneProductRow, error)
+	ReadOrderCountDaywise(ctx context.Context) ([]ReadOrderCountDaywiseRow, error)
+	ReadOrderCountMonthwise(ctx context.Context) ([]ReadOrderCountMonthwiseRow, error)
 	ReadProducts(ctx context.Context, arg ReadProductsParams) ([]ReadProductsRow, error)
 	ReadUser(ctx context.Context, userID int32) (User, error)
+	ReadUserCountDaywise(ctx context.Context) ([]ReadUserCountDaywiseRow, error)
+	ReadUserCountMonthwise(ctx context.Context) ([]ReadUserCountMonthwiseRow, error)
 	UpdateOneProduct(ctx context.Context, arg UpdateOneProductParams) error
 }
 

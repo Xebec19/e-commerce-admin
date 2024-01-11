@@ -27,7 +27,7 @@ export default function Navbar() {
         <ModeToggle />
 
         {!isLoggedIn && (
-          <Link to={"/auth/login"}>
+          <Link to={"/"}>
             <Button variant={"outline"} size={"icon"}>
               <KeyRound />
             </Button>
