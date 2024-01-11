@@ -1,5 +1,6 @@
 export interface IResponse {
   message: string;
-  payload: unknown;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  payload: any;
   status: boolean;
 }

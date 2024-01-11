@@ -6,6 +6,7 @@ import (
 	"github.com/Xebec19/e-commerce-admin/admin-api/auth"
 	db "github.com/Xebec19/e-commerce-admin/admin-api/db/sqlc"
 	"github.com/Xebec19/e-commerce-admin/admin-api/order"
+	"github.com/Xebec19/e-commerce-admin/admin-api/user"
 	"github.com/Xebec19/e-commerce-admin/admin-api/util"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -28,6 +29,7 @@ func main() {
 	app.Use(util.JwtValidate)
 
 	order.SetRoute(app)
+	user.SetRoute(app)
 
 	log.Printf("Server listening on %v", config.ServerAddress)
 	app.Listen(config.ServerAddress)
