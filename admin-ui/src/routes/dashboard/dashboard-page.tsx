@@ -11,37 +11,18 @@ export default function DashboardPage() {
       <h2 className="font-semibold text-lg my-2">Dashboard</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-        <div className="rounded-lg border h-[400px]">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-md">{"Orders (Months)"}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[400px]"></div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="rounded-lg border h-[400px] md:col-span-2">
+        <div className="rounded-lg">
           <Card>
             <CardHeader>
               <CardTitle className="text-md">{"Orders (Days)"}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-[400px]">
+              <div className="w-full aspect-square">
                 <TimeRange data={orders} months={4} />
               </div>
             </CardContent>
           </Card>
         </div>
-        {/* <div className="rounded-lg border h-[400px]">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-md">{"Orders (Months)"}</CardTitle>
-            </CardHeader>
-            <CardContent></CardContent>
-          </Card>
-        </div> */}
       </div>
     </div>
   );
