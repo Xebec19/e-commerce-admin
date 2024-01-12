@@ -11,6 +11,7 @@ import CreateCategoriesPage from "./routes/dashboard/categories/create-categorie
 import CreateProduct from "./routes/dashboard/products/create-product";
 import AuthRoot from "./routes/auth-root";
 import DashboardPage from "./routes/dashboard/dashboard-page";
+import CategoryList from "./routes/dashboard/categories/categories-list.page";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
           },
           {
             path: "category",
+            element: <CategoryList />,
             children: [
               {
                 path: "create",
