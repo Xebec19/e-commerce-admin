@@ -8,3 +8,11 @@ const CategorySchema = z.object({
 });
 
 export default CategorySchema;
+
+export const ZodCategory = z.object({
+  categoryId: z.number(),
+  categoryName: z.string(),
+  createdOn: z.string(),
+  imageUrl: z.string(),
+  status: z.string(),
+});
