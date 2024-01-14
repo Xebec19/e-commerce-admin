@@ -2,6 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Button } from "../ui/button";
 import { Pencil, Trash2 } from "lucide-react";
+import { DataTableColumnHeader } from "../ui/data-table/column-header";
 
 export type Column = {
   categoryId: number;
@@ -14,26 +15,42 @@ export type Column = {
 export const columns: ColumnDef<Column>[] = [
   {
     accessorKey: "categoryId",
-    header: "Category ID",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Category ID" />
+    ),
   },
   {
     accessorKey: "categoryName",
-    header: "Category Name",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Category Name" />
+    ),
   },
   {
     accessorKey: "imageUrl",
-    header: "Image URL",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Image" />
+    ),
+    cell: ({ row }) => (
+      <div className="relative border rounded-md max-w-[11rem]">
+        <img className="aspect-square w-full" src={row.getValue("imageUrl")} />
+      </div>
+    ),
+    enableSorting: false,
   },
   {
     accessorKey: "createdOn",
-    header: "Created On",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Created on" />
+    ),
     cell: ({ row }) => (
       <span>{format(new Date(row.getValue("createdOn")), "dd/MM/yyyy")}</span>
     ),
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
   },
   {
     id: "actions",
