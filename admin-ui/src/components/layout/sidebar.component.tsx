@@ -1,4 +1,10 @@
-import { Home, LayoutDashboard, Package, Settings, Users } from "lucide-react";
+import {
+  Home,
+  Layers3,
+  LayoutDashboard,
+  Package,
+  Settings,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Sidebar() {
@@ -15,17 +21,17 @@ export default function Sidebar() {
           <nav className="grid items-start px-4 text-sm font-medium divide-y-2">
             <Link
               className="flex items-center gap-3 px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-              to={"#"}
+              to={"/dashboard"}
             >
               <Home className="h-4 w-4" />
               Dashboard
             </Link>
             <Link
               className="flex items-center gap-3 px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-              to="#"
+              to="/dashboard/category"
             >
-              <Users className="h-4 w-4" />
-              Users
+              <Layers3 className="h-4 w-4" />
+              Category
             </Link>
             <Link
               className="flex items-center gap-3 px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
