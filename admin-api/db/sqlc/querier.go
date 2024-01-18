@@ -10,13 +10,13 @@ import (
 
 type Querier interface {
 	CountUser(ctx context.Context, lower string) (int64, error)
-	DeleteOneProduct(ctx context.Context) error
+	DeleteOneProduct(ctx context.Context, productID int32) error
 	FindAdminUser(ctx context.Context, lower string) (FindAdminUserRow, error)
 	ReadCategory(ctx context.Context) ([]Category, error)
-	ReadOneProduct(ctx context.Context, productID int32) (ReadOneProductRow, error)
+	ReadOneProduct(ctx context.Context, productID int32) (VProduct, error)
 	ReadOrderCountDaywise(ctx context.Context) ([]ReadOrderCountDaywiseRow, error)
 	ReadOrderCountMonthwise(ctx context.Context) ([]ReadOrderCountMonthwiseRow, error)
-	ReadProducts(ctx context.Context, arg ReadProductsParams) ([]ReadProductsRow, error)
+	ReadProducts(ctx context.Context, arg ReadProductsParams) ([]VProduct, error)
 	ReadUser(ctx context.Context, userID int32) (User, error)
 	ReadUserCountDaywise(ctx context.Context) ([]ReadUserCountDaywiseRow, error)
 	ReadUserCountMonthwise(ctx context.Context) ([]ReadUserCountMonthwiseRow, error)

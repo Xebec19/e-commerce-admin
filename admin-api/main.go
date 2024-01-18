@@ -7,6 +7,7 @@ import (
 	"github.com/Xebec19/e-commerce-admin/admin-api/category"
 	db "github.com/Xebec19/e-commerce-admin/admin-api/db/sqlc"
 	"github.com/Xebec19/e-commerce-admin/admin-api/order"
+	"github.com/Xebec19/e-commerce-admin/admin-api/product"
 	"github.com/Xebec19/e-commerce-admin/admin-api/user"
 	"github.com/Xebec19/e-commerce-admin/admin-api/util"
 	"github.com/gofiber/fiber/v2"
@@ -32,6 +33,7 @@ func main() {
 	order.SetRoute(app)
 	user.SetRoute(app)
 	category.SetRoute(app)
+	product.SetRoute(app)
 
 	log.Printf("Server listening on %v", config.ServerAddress)
 	app.Listen(config.ServerAddress)

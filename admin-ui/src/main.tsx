@@ -12,6 +12,7 @@ import CreateProduct from "./routes/dashboard/products/create-product";
 import AuthRoot from "./routes/auth-root";
 import DashboardPage from "./routes/dashboard/dashboard-page";
 import CategoryList from "./routes/dashboard/categories/categories-list.page";
+import ProductList from "./routes/dashboard/products/products-list.page";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
           },
           {
             path: "product",
+            element: <ProductList />,
             children: [
               {
                 path: "create",
