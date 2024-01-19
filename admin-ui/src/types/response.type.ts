@@ -4,3 +4,9 @@ export interface IResponse {
   payload: any;
   status: boolean;
 }
+
+export interface IPayload<T> {
+  message: string;
+  payload: T;
+  status: boolean;
+}

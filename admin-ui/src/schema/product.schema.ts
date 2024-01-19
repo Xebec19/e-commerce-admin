@@ -1,14 +1,17 @@
 import { z } from "zod";
 
 const ProductSchema = z.object({
-  categoryId: z.string().uuid(),
+  productId: z.number(),
+  imageUrl: z.string(),
+  categoryId: z.number(),
+  categoryName: z.string(),
   productName: z.string().min(1, "Name is required"),
-  price: z.string(),
-  deliveryPrice: z.string(),
+  price: z.number(),
+  deliveryPrice: z.number(),
   gender: z.enum(["male", "female"]),
   productDesc: z.string(),
-  quantity: z.string(),
-  status: z.enum(["active", "inactive"]),
+  quantity: z.number(),
+  createdOn: z.string(),
 });
 
 export default ProductSchema;

@@ -12,3 +12,13 @@ export interface IStatus {
   enum_status: string;
   valid: boolean;
 }
+
+export interface IInt32 {
+  Int32: number;
+  Valid: boolean;
+}
+
+export interface IGender {
+  enum_gender: string;
+  valid: boolean;
+}

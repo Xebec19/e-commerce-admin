@@ -11,55 +11,43 @@ import (
 )
 
 const deleteOneProduct = `-- name: DeleteOneProduct :exec
-UPDATE public.products SET status = 'inactive'
+UPDATE public.products SET status = 'inactive' where product_id = $1
 `
 
-func (q *Queries) DeleteOneProduct(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, deleteOneProduct)
+func (q *Queries) DeleteOneProduct(ctx context.Context, productID int32) error {
+	_, err := q.db.ExecContext(ctx, deleteOneProduct, productID)
 	return err
 }
 
 const readOneProduct = `-- name: ReadOneProduct :one
-SELECT product_id, category_id, product_name, price, delivery_price, gender, product_desc, quantity, country_id, created_on, updated_on
-FROM public.products WHERE status = 'active' AND product_id = $1
+SELECT product_id, product_name, image_url, quantity, created_on, price, delivery_price, product_desc, gender, category_id, category_name, country_id, country_name
+FROM public.v_products WHERE product_id = $1
 `
 
-type ReadOneProductRow struct {
-	ProductID     int32          `json:"product_id"`
-	CategoryID    sql.NullInt32  `json:"category_id"`
-	ProductName   string         `json:"product_name"`
-	Price         sql.NullInt32  `json:"price"`
-	DeliveryPrice sql.NullInt32  `json:"delivery_price"`
-	Gender        NullEnumGender `json:"gender"`
-	ProductDesc   sql.NullString `json:"product_desc"`
-	Quantity      sql.NullInt32  `json:"quantity"`
-	CountryID     sql.NullInt32  `json:"country_id"`
-	CreatedOn     sql.NullTime   `json:"created_on"`
-	UpdatedOn     sql.NullTime   `json:"updated_on"`
-}
-
-func (q *Queries) ReadOneProduct(ctx context.Context, productID int32) (ReadOneProductRow, error) {
+func (q *Queries) ReadOneProduct(ctx context.Context, productID int32) (VProduct, error) {
 	row := q.db.QueryRowContext(ctx, readOneProduct, productID)
-	var i ReadOneProductRow
+	var i VProduct
 	err := row.Scan(
 		&i.ProductID,
-		&i.CategoryID,
 		&i.ProductName,
+		&i.ImageUrl,
+		&i.Quantity,
+		&i.CreatedOn,
 		&i.Price,
 		&i.DeliveryPrice,
-		&i.Gender,
 		&i.ProductDesc,
-		&i.Quantity,
+		&i.Gender,
+		&i.CategoryID,
+		&i.CategoryName,
 		&i.CountryID,
-		&i.CreatedOn,
-		&i.UpdatedOn,
+		&i.CountryName,
 	)
 	return i, err
 }
 
 const readProducts = `-- name: ReadProducts :many
-SELECT product_id, category_id, product_name, price, delivery_price, gender, product_desc, quantity, country_id, created_on, updated_on
-FROM public.products WHERE status = 'active' LIMIT $1 OFFSET $2
+SELECT product_id, product_name, image_url, quantity, created_on, price, delivery_price, product_desc, gender, category_id, category_name, country_id, country_name
+FROM public.v_products LIMIT $1 OFFSET $2
 `
 
 type ReadProductsParams struct {
@@ -67,41 +55,29 @@ type ReadProductsParams struct {
 	Offset int32 `json:"offset"`
 }
 
-type ReadProductsRow struct {
-	ProductID     int32          `json:"product_id"`
-	CategoryID    sql.NullInt32  `json:"category_id"`
-	ProductName   string         `json:"product_name"`
-	Price         sql.NullInt32  `json:"price"`
-	DeliveryPrice sql.NullInt32  `json:"delivery_price"`
-	Gender        NullEnumGender `json:"gender"`
-	ProductDesc   sql.NullString `json:"product_desc"`
-	Quantity      sql.NullInt32  `json:"quantity"`
-	CountryID     sql.NullInt32  `json:"country_id"`
-	CreatedOn     sql.NullTime   `json:"created_on"`
-	UpdatedOn     sql.NullTime   `json:"updated_on"`
-}
-
-func (q *Queries) ReadProducts(ctx context.Context, arg ReadProductsParams) ([]ReadProductsRow, error) {
+func (q *Queries) ReadProducts(ctx context.Context, arg ReadProductsParams) ([]VProduct, error) {
 	rows, err := q.db.QueryContext(ctx, readProducts, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []ReadProductsRow
+	var items []VProduct
 	for rows.Next() {
-		var i ReadProductsRow
+		var i VProduct
 		if err := rows.Scan(
 			&i.ProductID,
-			&i.CategoryID,
 			&i.ProductName,
+			&i.ImageUrl,
+			&i.Quantity,
+			&i.CreatedOn,
 			&i.Price,
 			&i.DeliveryPrice,
-			&i.Gender,
 			&i.ProductDesc,
-			&i.Quantity,
+			&i.Gender,
+			&i.CategoryID,
+			&i.CategoryName,
 			&i.CountryID,
-			&i.CreatedOn,
-			&i.UpdatedOn,
+			&i.CountryName,
 		); err != nil {
 			return nil, err
 		}
