@@ -4,8 +4,17 @@ import { getProductAPI } from "@/lib/http/product";
 import useSWR from "swr";
 
 export default function ProductList() {
-  const { data: products } = useSWR("product/list", getProductAPI);
-  console.log({ products });
+  const { data: products, error } = useSWR("product/list", getProductAPI);
+
+  if (error) {
+    return (
+      <div className="p-4">
+        <span className="text-red-500">
+          Something went wrong! Products could not be loaded
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 space-y-4">

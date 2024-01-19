@@ -16,7 +16,7 @@ export async function getProductAPI() {
     response.data.payload.map((p) => ({
       productId: p.product_id,
       imageUrl: p.image_url,
-      categoryId: p.category_id.Int32,
+      categoryId: p.category_id,
       categoryName: p.category_name,
       productName: p.category_name,
       price: p.price.Int32,

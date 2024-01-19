@@ -25,7 +25,7 @@ export const columns: ColumnDef<z.infer<typeof ProductSchema>>[] = [
       <DataTableColumnHeader column={column} title="Image" />
     ),
     cell: ({ row }) => (
-      <div className="relative border rounded-md max-w-[11rem]">
+      <div className="relative border rounded-md w-[11rem]">
         <img className="aspect-square w-full" src={row.getValue("imageUrl")} />
       </div>
     ),

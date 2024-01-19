@@ -2,7 +2,7 @@ import { IGender, IInt32, IString, ITime } from "./general.type";
 
 export interface IProductPayload {
   product_id: number;
-  category_id: IInt32;
+  category_id: number;
   product_name: string;
   image_url: string;
   category_name: string;
@@ -11,7 +11,7 @@ export interface IProductPayload {
   gender: IGender;
   product_desc: IString;
   quantity: IInt32;
-  country_id: IInt32;
+  country_id: number;
   created_on: ITime;
   updated_on: ITime;
 }

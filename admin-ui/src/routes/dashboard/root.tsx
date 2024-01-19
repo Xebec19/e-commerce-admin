@@ -5,7 +5,7 @@ import { Link, Outlet } from "react-router-dom";
 
 export default function DashboardRoot() {
   return (
-    <div className="grid w-full min-h-screen overflow-hidden lg:grid-cols-[280px_1fr]">
+    <div className="grid w-full min-h-screen lg:grid-cols-[280px_1fr]">
       <Sidebar />
       <div className="flex flex-col">
         <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b px-6 ">
