@@ -10,7 +10,7 @@ export default function ProductList() {
     return (
       <div className="p-4">
         <span className="text-red-500">
-          Something went wrong! Products could not be loaded
+          Something went wrong! Products could not be loaded.
         </span>
       </div>
     );
