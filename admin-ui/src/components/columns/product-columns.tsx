@@ -7,12 +7,12 @@ import { z } from "zod";
 import ProductSchema from "@/schema/product.schema";
 
 export const columns: ColumnDef<z.infer<typeof ProductSchema>>[] = [
-  {
-    accessorKey: "productId",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Product ID" />
-    ),
-  },
+  // {
+  //   accessorKey: "productId",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Product ID" />
+  //   ),
+  // },
   {
     accessorKey: "productName",
     header: ({ column }) => (

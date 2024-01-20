@@ -39,8 +39,6 @@ export default function ProductFormComponent({
     resolver: zodResolver(ProductSchema),
   });
 
-  console.log({ errors });
-
   const onSubmit = (data: ProductFormType) => console.log({ data });
 
   return (

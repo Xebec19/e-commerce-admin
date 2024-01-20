@@ -28,7 +28,7 @@ export interface IGender {
   valid: boolean;
 }
 
-export interface IOrder {
+export interface IOrderStatus {
   enum_order_status: string;
   valid: boolean;
 }
