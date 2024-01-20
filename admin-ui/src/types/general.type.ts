@@ -8,6 +8,11 @@ export interface IString {
   Valid: boolean;
 }
 
+export interface IOrderStatus {
+  enum_order_status: string;
+  valid: boolean;
+}
+
 export interface IStatus {
   enum_status: string;
   valid: boolean;
@@ -20,5 +25,10 @@ export interface IInt32 {
 
 export interface IGender {
   enum_gender: string;
+  valid: boolean;
+}
+
+export interface IOrder {
+  enum_order_status: string;
   valid: boolean;
 }
