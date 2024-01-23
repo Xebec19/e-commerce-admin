@@ -17,7 +17,7 @@ type Querier interface {
 	ReadOrderCountDaywise(ctx context.Context) ([]ReadOrderCountDaywiseRow, error)
 	ReadOrderCountMonthwise(ctx context.Context) ([]ReadOrderCountMonthwiseRow, error)
 	ReadOrders(ctx context.Context, arg ReadOrdersParams) ([]ReadOrdersRow, error)
-	ReadProducts(ctx context.Context, arg ReadProductsParams) ([]VProduct, error)
+	ReadProducts(ctx context.Context, arg ReadProductsParams) ([]ReadProductsRow, error)
 	ReadUser(ctx context.Context, userID int32) (User, error)
 	ReadUserCountDaywise(ctx context.Context) ([]ReadUserCountDaywiseRow, error)
 	ReadUserCountMonthwise(ctx context.Context) ([]ReadUserCountMonthwiseRow, error)

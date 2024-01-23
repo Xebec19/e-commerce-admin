@@ -45,14 +45,14 @@ func (q *Queries) ReadOrderCountDaywise(ctx context.Context) ([]ReadOrderCountDa
 }
 
 const readOrderCountMonthwise = `-- name: ReadOrderCountMonthwise :many
-select to_char(date_trunc('month',created_on), 'MM') as month, count(*) as total_orders from orders 
+select to_char(date_trunc('month',created_on), 'MM') as month, count(product_id) over () as total_count from orders 
 where extract(year from created_on) = extract(year from current_date)
 group by date_trunc('month',created_on)
 `
 
 type ReadOrderCountMonthwiseRow struct {
-	Month       string `json:"month"`
-	TotalOrders int64  `json:"total_orders"`
+	Month      string `json:"month"`
+	TotalCount int64  `json:"total_count"`
 }
 
 func (q *Queries) ReadOrderCountMonthwise(ctx context.Context) ([]ReadOrderCountMonthwiseRow, error) {
@@ -64,7 +64,7 @@ func (q *Queries) ReadOrderCountMonthwise(ctx context.Context) ([]ReadOrderCount
 	var items []ReadOrderCountMonthwiseRow
 	for rows.Next() {
 		var i ReadOrderCountMonthwiseRow
-		if err := rows.Scan(&i.Month, &i.TotalOrders); err != nil {
+		if err := rows.Scan(&i.Month, &i.TotalCount); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

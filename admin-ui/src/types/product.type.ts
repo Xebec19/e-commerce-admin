@@ -14,6 +14,7 @@ export interface IProductPayload {
   country_id: number;
   created_on: ITime;
   updated_on: ITime;
+  total_count: number;
 }
 
 export interface IProduct {
