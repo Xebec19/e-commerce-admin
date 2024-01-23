@@ -12,6 +12,7 @@ const ProductSchema = z.object({
   productDesc: z.string(),
   quantity: z.number(),
   createdOn: z.string(),
+  totalCount: z.number(),
 });
 
 export default ProductSchema;

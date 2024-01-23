@@ -46,7 +46,7 @@ func (q *Queries) ReadOneProduct(ctx context.Context, productID int32) (VProduct
 }
 
 const readProducts = `-- name: ReadProducts :many
-SELECT product_id, product_name, image_url, quantity, created_on, price, delivery_price, product_desc, gender, category_id, category_name, country_id, country_name
+SELECT product_id, product_name, image_url, quantity, created_on, price, delivery_price, product_desc, gender, category_id, category_name, country_id, country_name, count(product_id) over () as total_count
 FROM public.v_products LIMIT $1 OFFSET $2
 `
 
@@ -55,15 +55,32 @@ type ReadProductsParams struct {
 	Offset int32 `json:"offset"`
 }
 
-func (q *Queries) ReadProducts(ctx context.Context, arg ReadProductsParams) ([]VProduct, error) {
+type ReadProductsRow struct {
+	ProductID     int32          `json:"product_id"`
+	ProductName   string         `json:"product_name"`
+	ImageUrl      string         `json:"image_url"`
+	Quantity      sql.NullInt32  `json:"quantity"`
+	CreatedOn     sql.NullTime   `json:"created_on"`
+	Price         sql.NullInt32  `json:"price"`
+	DeliveryPrice sql.NullInt32  `json:"delivery_price"`
+	ProductDesc   sql.NullString `json:"product_desc"`
+	Gender        NullEnumGender `json:"gender"`
+	CategoryID    int32          `json:"category_id"`
+	CategoryName  string         `json:"category_name"`
+	CountryID     int32          `json:"country_id"`
+	CountryName   string         `json:"country_name"`
+	TotalCount    int64          `json:"total_count"`
+}
+
+func (q *Queries) ReadProducts(ctx context.Context, arg ReadProductsParams) ([]ReadProductsRow, error) {
 	rows, err := q.db.QueryContext(ctx, readProducts, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []VProduct
+	var items []ReadProductsRow
 	for rows.Next() {
-		var i VProduct
+		var i ReadProductsRow
 		if err := rows.Scan(
 			&i.ProductID,
 			&i.ProductName,
@@ -78,6 +95,7 @@ func (q *Queries) ReadProducts(ctx context.Context, arg ReadProductsParams) ([]V
 			&i.CategoryName,
 			&i.CountryID,
 			&i.CountryName,
+			&i.TotalCount,
 		); err != nil {
 			return nil, err
 		}

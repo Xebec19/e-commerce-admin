@@ -13,12 +13,12 @@ export type Column = {
 };
 
 export const columns: ColumnDef<Column>[] = [
-  {
-    accessorKey: "categoryId",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Category ID" />
-    ),
-  },
+  // {
+  //   accessorKey: "categoryId",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Category ID" />
+  //   ),
+  // },
   {
     accessorKey: "categoryName",
     header: ({ column }) => (
