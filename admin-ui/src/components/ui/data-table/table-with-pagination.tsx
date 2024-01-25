@@ -24,7 +24,6 @@ import {
 import { DataTablePagination } from "./pagination";
 import { Input } from "../input";
 import { DataTableViewOptions } from "./column-toggle";
-import { useState } from "react";
 import { Button } from "../button";
 import { X } from "lucide-react";
 
@@ -35,6 +34,10 @@ interface DataTableProps<TData, TValue> {
   pageCount: number;
   pageIndex: PaginationState["pageIndex"];
   pageSize: PaginationState["pageSize"];
+  sorting: SortingState;
+  columnFilters: ColumnFiltersState;
+  setSorting: OnChangeFn<SortingState>;
+  setColumnFilters: OnChangeFn<ColumnFiltersState>;
   onPaginationChange: OnChangeFn<PaginationState>;
 }
 
@@ -45,11 +48,12 @@ export function DataTable<TData, TValue>({
   pageCount,
   pageIndex,
   pageSize,
+  sorting,
+  columnFilters,
+  setSorting,
+  setColumnFilters,
   onPaginationChange,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
   const table = useReactTable({
     data,
     columns,
