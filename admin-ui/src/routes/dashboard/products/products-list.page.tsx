@@ -23,8 +23,8 @@ export default function ProductList() {
   );
 
   const pageCount =
-    products?.length && !isNaN(products[0].totalCount)
-      ? Math.round(products[0].totalCount / pageSize)
+    products?.length && !isNaN(products[0].total_count)
+      ? Math.round(products[0].total_count / pageSize)
       : 0;
 
   // todo delete below useEffect
@@ -49,7 +49,7 @@ export default function ProductList() {
       <DataTable
         columns={columns}
         data={products ?? []}
-        searchableCol="categoryName"
+        searchableCol="category_name"
         pageIndex={pageIndex}
         pageSize={pageSize}
         pageCount={pageCount}

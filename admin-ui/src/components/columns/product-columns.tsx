@@ -14,25 +14,25 @@ export const columns: ColumnDef<z.infer<typeof ProductSchema>>[] = [
   //   ),
   // },
   {
-    accessorKey: "productName",
+    accessorKey: "product_name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Product Name" />
     ),
   },
   {
-    accessorKey: "imageUrl",
+    accessorKey: "image_url",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Image" />
     ),
     cell: ({ row }) => (
       <div className="relative border rounded-md w-[11rem]">
-        <img className="aspect-square w-full" src={row.getValue("imageUrl")} />
+        <img className="aspect-square w-full" src={row.getValue("image_url")} />
       </div>
     ),
     enableSorting: false,
   },
   {
-    accessorKey: "categoryName",
+    accessorKey: "category_name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Category Name" />
     ),
@@ -51,14 +51,14 @@ export const columns: ColumnDef<z.infer<typeof ProductSchema>>[] = [
     ),
   },
   {
-    accessorKey: "deliveryPrice",
+    accessorKey: "delivery_price",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Delivery Price" />
     ),
     cell: ({ row }) => (
       <span>
-        {typeof row.original.deliveryPrice === "number"
-          ? row.original.deliveryPrice.toFixed(2)
+        {typeof row.original.delivery_price === "number"
+          ? row.original.delivery_price.toFixed(2)
           : "-"}
       </span>
     ),
@@ -83,12 +83,12 @@ export const columns: ColumnDef<z.infer<typeof ProductSchema>>[] = [
     ),
   },
   {
-    accessorKey: "createdOn",
+    accessorKey: "created_on",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Created on" />
     ),
     cell: ({ row }) => (
-      <span>{format(new Date(row.getValue("createdOn")), "dd/MM/yyyy")}</span>
+      <span>{format(new Date(row.getValue("created_on")), "dd/MM/yyyy")}</span>
     ),
   },
   {
