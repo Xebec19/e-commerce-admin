@@ -40,8 +40,11 @@ const router = createBrowserRouter([
           },
           {
             path: "category",
-            element: <CategoryList />,
             children: [
+              {
+                path: "",
+                element: <CategoryList />,
+              },
               {
                 path: "create",
                 element: <CreateCategoriesPage />,

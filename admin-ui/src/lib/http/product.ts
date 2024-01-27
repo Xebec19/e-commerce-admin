@@ -4,10 +4,9 @@ import { IProductPayload } from "@/types/product.type";
 import { AxiosResponse } from "axios";
 import ProductSchema from "@/schema/product.schema";
 import { z } from "zod";
-import { PaginationState } from "@tanstack/react-table";
 
-export async function getProductAPI({ pageIndex, pageSize }: PaginationState) {
-  const url = `/product/list?page=${pageIndex}&size=${pageSize}`;
+export async function getProductAPI() {
+  const url = `/product/list`;
 
   const response = await (requestAPI.get(url) as Promise<
     AxiosResponse<IPayload<IProductPayload[]>>
@@ -15,18 +14,18 @@ export async function getProductAPI({ pageIndex, pageSize }: PaginationState) {
 
   return z.array(ProductSchema).parse(
     response?.data?.payload?.map((p) => ({
-      productId: p.product_id,
-      imageUrl: p.image_url,
-      categoryId: p.category_id,
-      categoryName: p.category_name,
-      productName: p.category_name,
+      product_id: p.product_id,
+      image_url: p.image_url,
+      category_id: p.category_id,
+      category_name: p.category_name,
+      product_name: p.product_name,
       price: p.price.Int32,
-      deliveryPrice: p.delivery_price.Int32,
+      delivery_price: p.delivery_price.Int32,
       gender: p.gender.enum_gender,
-      productDesc: p.product_desc.String,
+      product_desc: p.product_desc.String,
       quantity: p.quantity.Int32,
-      createdOn: p.created_on.Time,
-      totalCount: p.total_count,
+      created_on: p.created_on.Time,
+      total_count: p.total_count,
     })) || []
   );
 }

@@ -1,6 +1,6 @@
 -- name: ReadProducts :many
 SELECT product_id, product_name, image_url, quantity, created_on, price, delivery_price, product_desc, gender, category_id, category_name, country_id, country_name, count(product_id) over () as total_count
-FROM public.v_products LIMIT $1 OFFSET $2;
+FROM public.v_products;
 
 -- name: ReadOneProduct :one
 SELECT product_id, product_name, image_url, quantity, created_on, price, delivery_price, product_desc, gender, category_id, category_name, country_id, country_name

@@ -81,13 +81,8 @@ func (q *Queries) ReadOrderCountMonthwise(ctx context.Context) ([]ReadOrderCount
 const readOrders = `-- name: ReadOrders :many
 select o.order_id, concat(u.first_name, ' ', u.last_name) as user_name, u.email,
 o.price, o.delivery_price, o.total, o.status, o.created_on, o.discount_amount, o.discount_code 
-from orders o join users u on o.user_id = u.user_id LIMIT $1 OFFSET $2
+from orders o join users u on o.user_id = u.user_id
 `
-
-type ReadOrdersParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
 
 type ReadOrdersRow struct {
 	OrderID        string              `json:"order_id"`
@@ -102,8 +97,8 @@ type ReadOrdersRow struct {
 	DiscountCode   sql.NullString      `json:"discount_code"`
 }
 
-func (q *Queries) ReadOrders(ctx context.Context, arg ReadOrdersParams) ([]ReadOrdersRow, error) {
-	rows, err := q.db.QueryContext(ctx, readOrders, arg.Limit, arg.Offset)
+func (q *Queries) ReadOrders(ctx context.Context) ([]ReadOrdersRow, error) {
+	rows, err := q.db.QueryContext(ctx, readOrders)
 	if err != nil {
 		return nil, err
 	}
