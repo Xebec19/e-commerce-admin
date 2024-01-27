@@ -68,7 +68,7 @@ export default function LoginForm() {
         <Controller
           name="email"
           control={control}
-          render={({ field }) => <Input {...field} />}
+          render={({ field }) => <Input {...field} autoComplete="username" />}
         />
         {errors && (
           <span className="text-red-500">{errors.email?.message}</span>
@@ -80,7 +80,9 @@ export default function LoginForm() {
         <Controller
           name="password"
           control={control}
-          render={({ field }) => <Input type="password" {...field} />}
+          render={({ field }) => (
+            <Input type="password" {...field} autoComplete="current-password" />
+          )}
         />
         {errors && (
           <span className="text-red-500">{errors.password?.message}</span>

@@ -11,4 +11,4 @@ group by date_trunc('month',created_on);
 -- name: ReadOrders :many
 select o.order_id, concat(u.first_name, ' ', u.last_name) as user_name, u.email,
 o.price, o.delivery_price, o.total, o.status, o.created_on, o.discount_amount, o.discount_code 
-from orders o join users u on o.user_id = u.user_id LIMIT $1 OFFSET $2;
+from orders o join users u on o.user_id = u.user_id;

@@ -47,13 +47,8 @@ func (q *Queries) ReadOneProduct(ctx context.Context, productID int32) (VProduct
 
 const readProducts = `-- name: ReadProducts :many
 SELECT product_id, product_name, image_url, quantity, created_on, price, delivery_price, product_desc, gender, category_id, category_name, country_id, country_name, count(product_id) over () as total_count
-FROM public.v_products LIMIT $1 OFFSET $2
+FROM public.v_products
 `
-
-type ReadProductsParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
 
 type ReadProductsRow struct {
 	ProductID     int32          `json:"product_id"`
@@ -72,8 +67,8 @@ type ReadProductsRow struct {
 	TotalCount    int64          `json:"total_count"`
 }
 
-func (q *Queries) ReadProducts(ctx context.Context, arg ReadProductsParams) ([]ReadProductsRow, error) {
-	rows, err := q.db.QueryContext(ctx, readProducts, arg.Limit, arg.Offset)
+func (q *Queries) ReadProducts(ctx context.Context) ([]ReadProductsRow, error) {
+	rows, err := q.db.QueryContext(ctx, readProducts)
 	if err != nil {
 		return nil, err
 	}

@@ -1,36 +1,12 @@
 import { columns } from "@/components/columns/product-columns";
-import { DataTable } from "@/components/ui/data-table/table-with-pagination";
+import { DataTable } from "@/components/ui/data-table/table";
 import { getProductAPI } from "@/lib/http/product";
-import {
-  ColumnFiltersState,
-  PaginationState,
-  SortingState,
-} from "@tanstack/react-table";
-import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 export default function ProductList() {
-  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-  const { data: products, error } = useSWR(
-    ["product/list", pageIndex, pageSize],
-    () => getProductAPI({ pageIndex, pageSize })
+  const { data: products, error } = useSWR(["product/list"], () =>
+    getProductAPI()
   );
-
-  const pageCount =
-    products?.length && !isNaN(products[0].total_count)
-      ? Math.round(products[0].total_count / pageSize)
-      : 0;
-
-  // todo delete below useEffect
-  useEffect(() => {
-    console.log({ sorting, columnFilters });
-  }, [sorting, columnFilters]);
 
   if (error) {
     console.error(error);
@@ -50,14 +26,6 @@ export default function ProductList() {
         columns={columns}
         data={products ?? []}
         searchableCol="category_name"
-        pageIndex={pageIndex}
-        pageSize={pageSize}
-        pageCount={pageCount}
-        sorting={sorting}
-        setSorting={setSorting}
-        columnFilters={columnFilters}
-        setColumnFilters={setColumnFilters}
-        onPaginationChange={setPagination}
       />
     </div>
   );

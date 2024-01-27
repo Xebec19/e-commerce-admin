@@ -7,6 +7,8 @@ import { SelectContent, SelectTrigger } from "@radix-ui/react-select";
 import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CategorySchema from "@/schema/category.schema";
+import { ChangeEvent, useRef } from "react";
+import { X } from "lucide-react";
 
 export default function CategoryForm({
   categoryId = "",
@@ -17,6 +19,7 @@ export default function CategoryForm({
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -29,11 +32,25 @@ export default function CategoryForm({
   });
 
   const onSubmit = (data: CategoryFormType) => console.log({ data });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === "string") {
+          setValue("imageUrl", reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-4 space-y-4 rounded-lg border bg-white hover:border-blue-600 dark:bg-black relative border-neutral-200 dark:border-neutral-800 w-full md:w-[50%]"
+      className="p-4 space-y-4 rounded-lg border hover:border-blue-600  border-neutral-200 dark:border-neutral-800 w-full md:w-[50%]"
     >
       <div className="flex flex-col space-y-2">
         <Label htmlFor="categoryName">Category Name</Label>
@@ -53,7 +70,32 @@ export default function CategoryForm({
           control={control}
           name="imageUrl"
           render={({ field }) => (
-            <Input id="categoryImage" {...field} type="file" />
+            <div className="space-y-2">
+              <Input
+                id="categoryImage"
+                onChange={handleImageUpload}
+                type="file"
+                ref={fileInputRef}
+                accept="image/*"
+              />
+              {field.value ? (
+                <div className="relative rounded-md border aspect-square w-20">
+                  <X
+                    className="absolute right-1 top-1 h-4 w-4 cursor-pointer rounded-full "
+                    onClick={() => {
+                      field.onChange("");
+                      if (fileInputRef.current) fileInputRef.current.value = "";
+                    }}
+                  />
+                  <img
+                    src={field.value}
+                    className="h-full w-full object-contain transition duration-300 ease-in-out group-hover:scale-105 "
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
           )}
         />
         {errors.imageUrl && (
@@ -71,10 +113,13 @@ export default function CategoryForm({
               value={field.value}
               onValueChange={(value) => field.onChange(value)}
             >
-              <SelectTrigger asChild className="w-[180px]">
-                <SelectValue placeholder="Theme" className="border w-full" />
+              <SelectTrigger className="w-[180px] border rounded-md px-3 py-2">
+                <SelectValue
+                  placeholder="Status"
+                  className="border w-full bg-foreground"
+                />
               </SelectTrigger>
-              <SelectContent className="bg-background border">
+              <SelectContent className="bg-background border rounded-md px-3 py-2">
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="inactive">Inactive</SelectItem>
               </SelectContent>

@@ -5,6 +5,7 @@ import (
 
 	"github.com/Xebec19/e-commerce-admin/admin-api/auth"
 	"github.com/Xebec19/e-commerce-admin/admin-api/category"
+	"github.com/Xebec19/e-commerce-admin/admin-api/cloud"
 	db "github.com/Xebec19/e-commerce-admin/admin-api/db/sqlc"
 	"github.com/Xebec19/e-commerce-admin/admin-api/order"
 	"github.com/Xebec19/e-commerce-admin/admin-api/product"
@@ -25,6 +26,7 @@ func main() {
 	app.Use(cors.New())
 
 	db.Connect()
+	cloud.SetupSession()
 
 	auth.SetRoute(app)
 

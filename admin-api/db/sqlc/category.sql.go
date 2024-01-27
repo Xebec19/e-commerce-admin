@@ -7,7 +7,24 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
+
+const createCategory = `-- name: CreateCategory :exec
+INSERT INTO public.categories
+(category_name, created_on, image_url, status)
+VALUES($1, CURRENT_TIMESTAMP, $2, 'active'::enum_status)
+`
+
+type CreateCategoryParams struct {
+	CategoryName string         `json:"category_name"`
+	ImageUrl     sql.NullString `json:"image_url"`
+}
+
+func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) error {
+	_, err := q.db.ExecContext(ctx, createCategory, arg.CategoryName, arg.ImageUrl)
+	return err
+}
 
 const readCategory = `-- name: ReadCategory :many
 SELECT category_id, category_name, created_on, image_url, status

@@ -4,10 +4,9 @@ import { IProductPayload } from "@/types/product.type";
 import { AxiosResponse } from "axios";
 import ProductSchema from "@/schema/product.schema";
 import { z } from "zod";
-import { PaginationState } from "@tanstack/react-table";
 
-export async function getProductAPI({ pageIndex, pageSize }: PaginationState) {
-  const url = `/product/list?page=${pageIndex}&size=${pageSize}`;
+export async function getProductAPI() {
+  const url = `/product/list`;
 
   const response = await (requestAPI.get(url) as Promise<
     AxiosResponse<IPayload<IProductPayload[]>>
@@ -19,7 +18,7 @@ export async function getProductAPI({ pageIndex, pageSize }: PaginationState) {
       image_url: p.image_url,
       category_id: p.category_id,
       category_name: p.category_name,
-      product_name: p.category_name,
+      product_name: p.product_name,
       price: p.price.Int32,
       delivery_price: p.delivery_price.Int32,
       gender: p.gender.enum_gender,
