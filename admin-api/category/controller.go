@@ -3,6 +3,7 @@ package category
 import (
 	"database/sql"
 
+	"github.com/Xebec19/e-commerce-admin/admin-api/cloud"
 	db "github.com/Xebec19/e-commerce-admin/admin-api/db/sqlc"
 	"github.com/Xebec19/e-commerce-admin/admin-api/util"
 	"github.com/gofiber/fiber/v2"
@@ -19,22 +20,23 @@ func getCategory(c *fiber.Ctx) error {
 	return nil
 }
 
-type categoryPayload struct {
-	CategoryName string `json:"categoryName" binding:"required"`
-	ImageUrl     string `json:"imageUrl" binding:"required"`
-	Status       string `json:"status" binding:"required"`
-}
-
 func createCategory(c *fiber.Ctx) error {
-	req := new(categoryPayload)
-	if err := c.BodyParser(req); err != nil {
+	form, err := c.MultipartForm()
+
+	if err != nil {
+		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+		return err
+	}
+
+	url, err := cloud.UploadImage(form.File["imageUrl"][0])
+	if err != nil {
 		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 		return err
 	}
 
 	argv := db.CreateCategoryParams{
-		CategoryName: req.CategoryName,
-		ImageUrl:     sql.NullString{String: req.ImageUrl, Valid: true},
+		CategoryName: form.Value["categoryName"][0],
+		ImageUrl:     sql.NullString{String: url, Valid: true},
 	}
 
 	db.DBQuery.CreateCategory(c.Context(), argv)

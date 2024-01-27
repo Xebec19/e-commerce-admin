@@ -2,7 +2,6 @@ package cloud
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"mime/multipart"
 
@@ -44,7 +43,14 @@ func SetupSession() {
 	Uploader = s3manager.NewUploader(awsSession)
 }
 
-func UploadImage(fileReader io.Reader, fileHeader *multipart.FileHeader) (string, error) {
+func UploadImage(file *multipart.FileHeader) (string, error) {
+
+	src, err := file.Open()
+	if err != nil {
+		return "", err
+	}
+	defer src.Close()
+
 	config, err := util.LoadConfig(".")
 	if err != nil {
 		log.Fatal("cannot load config:", err)
@@ -53,14 +59,14 @@ func UploadImage(fileReader io.Reader, fileHeader *multipart.FileHeader) (string
 
 	_, err = Uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String(bucketName),
-		Key:    aws.String(fileHeader.Filename),
-		Body:   fileReader, // add file body here
+		Key:    aws.String(file.Filename),
+		Body:   src, // add file body here
 	})
 	if err != nil {
 		return "", err
 	}
 
-	url := fmt.Sprintf("https://%s.s3.amazonaws.com/%s", bucketName, fileHeader.Filename)
+	url := fmt.Sprintf("https://%s.s3.amazonaws.com/%s", bucketName, file.Filename)
 
 	return url, nil
 }

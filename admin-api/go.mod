@@ -3,6 +3,7 @@ module github.com/Xebec19/e-commerce-admin/admin-api
 go 1.21.1
 
 require (
+	github.com/aws/aws-sdk-go v1.50.5
 	github.com/gofiber/fiber v1.14.6
 	github.com/gofiber/fiber/v2 v2.51.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
@@ -15,13 +16,14 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/gofiber/utils v0.0.10 // indirect
 	github.com/gorilla/schema v1.1.0 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 )
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/google/uuid v1.4.0
+	github.com/google/uuid v1.4.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect
 	github.com/lib/pq v1.10.9
