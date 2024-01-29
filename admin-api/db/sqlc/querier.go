@@ -14,6 +14,7 @@ type Querier interface {
 	DeleteOneProduct(ctx context.Context, productID int32) error
 	FindAdminUser(ctx context.Context, lower string) (FindAdminUserRow, error)
 	ReadCategory(ctx context.Context) ([]Category, error)
+	ReadCategoryByID(ctx context.Context, categoryID int32) (Category, error)
 	ReadOneProduct(ctx context.Context, productID int32) (VProduct, error)
 	ReadOrderCountDaywise(ctx context.Context) ([]ReadOrderCountDaywiseRow, error)
 	ReadOrderCountMonthwise(ctx context.Context) ([]ReadOrderCountMonthwiseRow, error)

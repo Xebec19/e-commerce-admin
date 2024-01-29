@@ -59,3 +59,21 @@ func (q *Queries) ReadCategory(ctx context.Context) ([]Category, error) {
 	}
 	return items, nil
 }
+
+const readCategoryByID = `-- name: ReadCategoryByID :one
+SELECT category_id, category_name, created_on, image_url, status
+FROM public.categories WHERE category_id = $1
+`
+
+func (q *Queries) ReadCategoryByID(ctx context.Context, categoryID int32) (Category, error) {
+	row := q.db.QueryRowContext(ctx, readCategoryByID, categoryID)
+	var i Category
+	err := row.Scan(
+		&i.CategoryID,
+		&i.CategoryName,
+		&i.CreatedOn,
+		&i.ImageUrl,
+		&i.Status,
+	)
+	return i, err
+}
