@@ -11,7 +11,7 @@ import { ChangeEvent, useRef } from "react";
 import { X } from "lucide-react";
 
 export default function CategoryForm({
-  categoryId = "",
+  categoryId = 0,
   categoryName = "",
   imageUrl = "",
   status = "active",

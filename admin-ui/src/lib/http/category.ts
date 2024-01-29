@@ -2,7 +2,8 @@ import { AxiosResponse } from "axios";
 import requestAPI from "./request";
 import { z } from "zod";
 import { ZodCategory } from "@/schema/category.schema";
-import { ICategoryResponse } from "@/types/category.type";
+import { ICategory, ICategoryResponse } from "@/types/category.type";
+import { IPayload } from "@/types/response.type";
 
 export async function getCategoryAPI() {
   const url = "/category/list";
@@ -20,4 +21,22 @@ export async function getCategoryAPI() {
   }));
 
   return z.array(ZodCategory).parse(rows);
+}
+
+export async function getCategoryByIdAPI(id: string) {
+  const url = `/category/list/${id}`;
+
+  const response = await (requestAPI.get(url) as Promise<
+    AxiosResponse<IPayload<ICategory>>
+  >);
+
+  const row = {
+    categoryId: response.data.payload.category_id,
+    categoryName: response.data.payload.category_name,
+    createdOn: response.data.payload.created_on.Time,
+    imageUrl: response.data.payload.image_url.String,
+    status: response.data.payload.status.enum_status,
+  };
+
+  return ZodCategory.parse(row);
 }
