@@ -2,6 +2,7 @@ package category
 
 import (
 	"database/sql"
+	"strconv"
 
 	"github.com/Xebec19/e-commerce-admin/admin-api/cloud"
 	db "github.com/Xebec19/e-commerce-admin/admin-api/db/sqlc"
@@ -17,6 +18,22 @@ func getCategory(c *fiber.Ctx) error {
 	}
 
 	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(categories, "categories fetched"))
+	return nil
+}
+
+func getCategoryById(c *fiber.Ctx) error {
+	categoryID, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return err
+	}
+
+	category, err := db.DBQuery.ReadCategoryByID(c.Context(), int32(categoryID))
+
+	if err != nil {
+		return err
+	}
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(category, "category fetched"))
 	return nil
 }
 
