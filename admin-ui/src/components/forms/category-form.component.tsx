@@ -10,12 +10,21 @@ import CategorySchema from "@/schema/category.schema";
 import { ChangeEvent, useRef } from "react";
 import { X } from "lucide-react";
 
+type CategoryFormProps = {
+  categoryId?: number;
+  categoryName?: string;
+  status?: string;
+  imageUrl?: string;
+  onSubmit: (value: CategoryFormType) => void;
+};
+
 export default function CategoryForm({
   categoryId = 0,
   categoryName = "",
   imageUrl = "",
   status = "active",
-}: CategoryFormType) {
+  onSubmit,
+}: CategoryFormProps) {
   const {
     handleSubmit,
     control,
@@ -31,7 +40,6 @@ export default function CategoryForm({
     resolver: zodResolver(CategorySchema),
   });
 
-  const onSubmit = (data: CategoryFormType) => console.log({ data });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {

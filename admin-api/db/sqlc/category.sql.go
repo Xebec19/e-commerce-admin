@@ -77,3 +77,21 @@ func (q *Queries) ReadCategoryByID(ctx context.Context, categoryID int32) (Categ
 	)
 	return i, err
 }
+
+const updateCategoryById = `-- name: UpdateCategoryById :exec
+UPDATE public.categories SET 
+category_name = $1,
+image_url = $2
+WHERE category_id = $3 and status = 'active'::enum_status
+`
+
+type UpdateCategoryByIdParams struct {
+	CategoryName string         `json:"category_name"`
+	ImageUrl     sql.NullString `json:"image_url"`
+	CategoryID   int32          `json:"category_id"`
+}
+
+func (q *Queries) UpdateCategoryById(ctx context.Context, arg UpdateCategoryByIdParams) error {
+	_, err := q.db.ExecContext(ctx, updateCategoryById, arg.CategoryName, arg.ImageUrl, arg.CategoryID)
+	return err
+}

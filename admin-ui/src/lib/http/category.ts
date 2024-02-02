@@ -4,6 +4,7 @@ import { z } from "zod";
 import { ZodCategory } from "@/schema/category.schema";
 import { ICategory, ICategoryResponse } from "@/types/category.type";
 import { IPayload } from "@/types/response.type";
+import { CategoryFormType } from "@/types/form.type";
 
 export async function getCategoryAPI() {
   const url = "/category/list";
@@ -39,4 +40,13 @@ export async function getCategoryByIdAPI(id: string) {
   };
 
   return ZodCategory.parse(row);
+}
+
+export async function editCategory(value: CategoryFormType) {
+  const url = `/category/edit`;
+  const response = await (requestAPI.post(url, value) as Promise<
+    AxiosResponse<IPayload<null>>
+  >);
+
+  return response.data;
 }
