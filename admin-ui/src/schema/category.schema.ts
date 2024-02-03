@@ -3,7 +3,7 @@ import { z } from "zod";
 const CategorySchema = z.object({
   categoryId: z.number().nullable(),
   categoryName: z.string().min(1, "Name is required"),
-  imageUrl: z.string().min(1, "Image is required"),
+  image: z.instanceof(File),
   status: z.enum(["active", "inactive"]),
 });
 

@@ -7,7 +7,7 @@ export type CategoryFormType = {
   categoryId?: number;
   categoryName?: string;
   status?: string;
-  imageUrl?: string;
+  imageUrl?: string | Blob;
 };
 
 export type ProductFormType = {

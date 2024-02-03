@@ -7,9 +7,15 @@ import { SelectContent, SelectTrigger } from "@radix-ui/react-select";
 import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CategorySchema from "@/schema/category.schema";
-import { ChangeEvent, useRef } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 
+type CategoryForm = {
+  categoryId: number;
+  categoryName: string;
+  image: File;
+  status: string;
+};
 type CategoryFormProps = {
   categoryId?: number;
   categoryName?: string;
@@ -25,33 +31,29 @@ export default function CategoryForm({
   status = "active",
   onSubmit,
 }: CategoryFormProps) {
+  const [imagePreview, setImagePreview] = useState<string>(imageUrl);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const {
-    handleSubmit,
     control,
+    handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm({
+  } = useForm<CategoryForm>({
     defaultValues: {
       categoryId,
       categoryName,
-      imageUrl,
       status,
     },
     resolver: zodResolver(CategorySchema),
   });
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setValue("imageUrl", reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
+      setValue("image", file);
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
     }
   }
 
@@ -73,20 +75,20 @@ export default function CategoryForm({
       </div>
 
       <div className="flex flex-col space-y-2">
-        <Label htmlFor="imageUrl">Category Image</Label>
+        <Label htmlFor="image">Category Image</Label>
         <Controller
           control={control}
-          name="imageUrl"
+          name="image"
           render={({ field }) => (
             <div className="space-y-2">
               <Input
-                id="categoryImage"
-                onChange={handleImageUpload}
+                id="image"
                 type="file"
-                ref={fileInputRef}
                 accept="image/*"
+                onChange={handleImageUpload}
+                ref={fileInputRef}
               />
-              {field.value ? (
+              {imagePreview ? (
                 <div className="relative rounded-md border aspect-square w-20">
                   <X
                     className="absolute right-1 top-1 h-4 w-4 cursor-pointer rounded-full "
@@ -96,7 +98,7 @@ export default function CategoryForm({
                     }}
                   />
                   <img
-                    src={field.value}
+                    src={imagePreview}
                     className="h-full w-full object-contain transition duration-300 ease-in-out group-hover:scale-105 "
                   />
                 </div>
@@ -106,8 +108,12 @@ export default function CategoryForm({
             </div>
           )}
         />
-        {errors.imageUrl && (
-          <span className="text-red-500">{errors.imageUrl.message}</span>
+        {errors.image && (
+          <span className="text-red-500">
+            {errors.image.type === "custom"
+              ? "Invalid image"
+              : errors.image.message}
+          </span>
         )}
       </div>
 

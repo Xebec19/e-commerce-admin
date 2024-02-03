@@ -2,6 +2,7 @@ package category
 
 import (
 	"database/sql"
+	"net/http"
 	"strconv"
 
 	"github.com/Xebec19/e-commerce-admin/admin-api/cloud"
@@ -69,10 +70,21 @@ func updateCategory(c *fiber.Ctx) error {
 		return err
 	}
 
-	url, err := cloud.UploadImage(form.File["imageUrl"][0])
-	if err != nil {
-		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	var url string
+	fileHeader, err := c.FormFile("imageUrl")
+	if err != nil && err != http.ErrMissingFile {
 		return err
+	}
+
+	if fileHeader == nil {
+		url = form.Value["imageUrl"][0]
+	} else {
+		url, err = cloud.UploadImage(form.File["imageUrl"][0])
+
+		if err != nil {
+			c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+			return err
+		}
 	}
 
 	categoryID, err := strconv.Atoi(form.Value["categoryId"][0])
@@ -89,5 +101,5 @@ func updateCategory(c *fiber.Ctx) error {
 
 	db.DBQuery.UpdateCategoryById(c.Context(), argv)
 
-	return c.Status(fiber.StatusCreated).JSON(util.SuccessResponse(nil, "Category created"))
+	return c.Status(fiber.StatusCreated).JSON(util.SuccessResponse(nil, "category updated"))
 }

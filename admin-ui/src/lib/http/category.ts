@@ -5,6 +5,7 @@ import { ZodCategory } from "@/schema/category.schema";
 import { ICategory, ICategoryResponse } from "@/types/category.type";
 import { IPayload } from "@/types/response.type";
 import { CategoryFormType } from "@/types/form.type";
+import { format } from "date-fns";
 
 export async function getCategoryAPI() {
   const url = "/category/list";
@@ -42,9 +43,31 @@ export async function getCategoryByIdAPI(id: string) {
   return ZodCategory.parse(row);
 }
 
+export async function createCategory(value: CategoryFormType) {
+  const url = `/category/create`;
+  const formData = new FormData();
+  formData.append("categoryName", value.categoryName!);
+  formData.append(
+    "imageUrl",
+    value.imageUrl! as Blob,
+    `${value.categoryName}-${format(new Date(), "dd/MM/yyyy hh:mm a")}`
+  );
+
+  const response = await (requestAPI.post(url, formData) as Promise<
+    AxiosResponse<IPayload<null>>
+  >);
+
+  return response.data;
+}
+
 export async function editCategory(value: CategoryFormType) {
   const url = `/category/edit`;
-  const response = await (requestAPI.post(url, value) as Promise<
+  const formData = new FormData();
+  formData.append("categoryId", value.categoryId + "");
+  formData.append("categoryName", value.categoryName!);
+  formData.append("imageUrl", value.imageUrl!);
+
+  const response = await (requestAPI.post(url, formData) as Promise<
     AxiosResponse<IPayload<null>>
   >);
 
