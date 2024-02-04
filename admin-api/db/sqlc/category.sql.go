@@ -28,7 +28,7 @@ func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) 
 
 const readCategory = `-- name: ReadCategory :many
 SELECT category_id, category_name, created_on, image_url, status
-FROM public.categories
+FROM public.categories order by created_on desc
 `
 
 func (q *Queries) ReadCategory(ctx context.Context) ([]Category, error) {

@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 const CategorySchema = z.object({
-  categoryId: z.number().nullable(),
+  categoryId: z.number().optional(),
   categoryName: z.string().min(1, "Name is required"),
-  image: z.instanceof(File),
-  status: z.enum(["active", "inactive"]),
+  image: z.any(),
+  status: z.string(),
 });
 
 export default CategorySchema;

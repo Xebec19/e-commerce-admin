@@ -1,6 +1,6 @@
 -- name: ReadCategory :many
 SELECT category_id, category_name, created_on, image_url, status
-FROM public.categories;
+FROM public.categories order by created_on desc;
 
 -- name: ReadCategoryByID :one
 SELECT category_id, category_name, created_on, image_url, status

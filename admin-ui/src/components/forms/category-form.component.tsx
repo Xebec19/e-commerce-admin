@@ -1,4 +1,3 @@
-import { CategoryFormType } from "@/types/form.type";
 import { Controller, useForm } from "react-hook-form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -7,8 +6,11 @@ import { SelectContent, SelectTrigger } from "@radix-ui/react-select";
 import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CategorySchema from "@/schema/category.schema";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { X } from "lucide-react";
+import { z } from "zod";
+
+const MAX_FILE_SIZE = 4 * 1024 * 1024; // 5 MB
 
 type CategoryForm = {
   categoryId: number;
@@ -21,7 +23,7 @@ type CategoryFormProps = {
   categoryName?: string;
   status?: string;
   imageUrl?: string;
-  onSubmit: (value: CategoryFormType) => void;
+  onSubmit: (value: z.infer<typeof CategorySchema>) => void;
 };
 
 export default function CategoryForm({
@@ -31,6 +33,7 @@ export default function CategoryForm({
   status = "active",
   onSubmit,
 }: CategoryFormProps) {
+  const [loading, setLoading] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string>(imageUrl);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -38,6 +41,7 @@ export default function CategoryForm({
     control,
     handleSubmit,
     setValue,
+    setError,
     formState: { errors },
   } = useForm<CategoryForm>({
     defaultValues: {
@@ -50,6 +54,12 @@ export default function CategoryForm({
 
   function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
+    if (file && file.size > MAX_FILE_SIZE) {
+      setError("image", {
+        message: "File size exceeds the limit. Please choose a smaller file.",
+      });
+      return;
+    }
     if (file) {
       setValue("image", file);
       const previewUrl = URL.createObjectURL(file);
@@ -57,9 +67,23 @@ export default function CategoryForm({
     }
   }
 
+  function submitHandler(value: z.infer<typeof CategorySchema>) {
+    try {
+      setLoading(true);
+      if (!value.image && !imagePreview) {
+        setError("image", { message: "Invalid" });
+        return;
+      }
+
+      onSubmit(value);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(submitHandler)}
       className="p-4 space-y-4 rounded-lg border hover:border-blue-600  border-neutral-200 dark:border-neutral-800 w-full md:w-[50%]"
     >
       <div className="flex flex-col space-y-2">
@@ -92,9 +116,11 @@ export default function CategoryForm({
                 <div className="relative rounded-md border aspect-square w-20">
                   <X
                     className="absolute right-1 top-1 h-4 w-4 cursor-pointer rounded-full "
+                    type="button"
                     onClick={() => {
                       field.onChange("");
                       if (fileInputRef.current) fileInputRef.current.value = "";
+                      setImagePreview("");
                     }}
                   />
                   <img
@@ -145,7 +171,12 @@ export default function CategoryForm({
         )}
       </div>
 
-      <Button type="submit" variant="outline" className="w-full">
+      <Button
+        type="submit"
+        variant="outline"
+        className="w-full"
+        disabled={loading}
+      >
         Submit
       </Button>
     </form>

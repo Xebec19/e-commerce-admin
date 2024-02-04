@@ -2,9 +2,10 @@ import CategoryForm from "@/components/forms/category-form.component";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { editCategory, getCategoryByIdAPI } from "@/lib/http/category";
-import { CategoryFormType } from "@/types/form.type";
-import { useParams } from "react-router-dom";
+import CategorySchema from "@/schema/category.schema";
+import { useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
+import { z } from "zod";
 
 export default function EditCategoryPage() {
   const { id = "0" } = useParams();
@@ -13,7 +14,9 @@ export default function EditCategoryPage() {
     getCategoryByIdAPI(id)
   );
 
-  async function onSubmit(value: CategoryFormType) {
+  const navigate = useNavigate();
+
+  async function onSubmit(value: z.infer<typeof CategorySchema>) {
     try {
       const response = await editCategory(value);
       if (!response.status) {
@@ -22,8 +25,10 @@ export default function EditCategoryPage() {
       toast({
         title: "Category updated",
       });
+
+      navigate("/dashboard/category");
     } catch (error: unknown) {
-      console.error(error);
+      console.error({ error });
       toast({
         variant: "destructive",
         title: "Something went wrong!",
