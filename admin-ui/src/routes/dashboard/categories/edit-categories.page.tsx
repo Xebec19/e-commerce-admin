@@ -1,14 +1,40 @@
 import CategoryForm from "@/components/forms/category-form.component";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getCategoryByIdAPI } from "@/lib/http/category";
-import { useParams } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import { editCategory, getCategoryByIdAPI } from "@/lib/http/category";
+import CategorySchema from "@/schema/category.schema";
+import { useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
+import { z } from "zod";
 
 export default function EditCategoryPage() {
   const { id = "0" } = useParams();
+  const { toast } = useToast();
   const { data } = useSWR(!isNaN(+id) ? ["category", id] : null, () =>
     getCategoryByIdAPI(id)
   );
+
+  const navigate = useNavigate();
+
+  async function onSubmit(value: z.infer<typeof CategorySchema>) {
+    try {
+      const response = await editCategory(value);
+      if (!response.status) {
+        throw new Error("Request failed");
+      }
+      toast({
+        title: "Category updated",
+      });
+
+      navigate("/dashboard/category");
+    } catch (error: unknown) {
+      console.error({ error });
+      toast({
+        variant: "destructive",
+        title: "Something went wrong!",
+      });
+    }
+  }
 
   return (
     <div className="p-4 space-y-4">
@@ -17,7 +43,7 @@ export default function EditCategoryPage() {
       </div>
       <div>
         {data ? (
-          <CategoryForm {...data} />
+          <CategoryForm {...data} onSubmit={onSubmit} />
         ) : (
           <div className="flex-col space-y-4">
             <Skeleton className="h-4 w-full max-w-sm" />

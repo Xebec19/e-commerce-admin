@@ -23,6 +23,7 @@ type Querier interface {
 	ReadUser(ctx context.Context, userID int32) (User, error)
 	ReadUserCountDaywise(ctx context.Context) ([]ReadUserCountDaywiseRow, error)
 	ReadUserCountMonthwise(ctx context.Context) ([]ReadUserCountMonthwiseRow, error)
+	UpdateCategoryById(ctx context.Context, arg UpdateCategoryByIdParams) error
 	UpdateOneProduct(ctx context.Context, arg UpdateOneProductParams) error
 }
 

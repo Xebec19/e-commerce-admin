@@ -2,6 +2,6 @@ sqlc:
 	sqlc generate
 
 debug:
-	air
+	air -c .air.toml
 
 .PHONY: sqlc air

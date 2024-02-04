@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/navbar.component";
 import Sidebar from "@/components/layout/sidebar.component";
+import { Toaster } from "@/components/ui/toaster";
 import { LayoutDashboard } from "lucide-react";
 import { Link, Outlet } from "react-router-dom";
 
@@ -21,6 +22,7 @@ export default function DashboardRoot() {
           <Outlet />
         </main>
       </div>
+      <Toaster />
     </div>
   );
 }

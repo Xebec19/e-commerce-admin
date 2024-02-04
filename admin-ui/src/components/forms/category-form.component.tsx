@@ -1,4 +1,3 @@
-import { CategoryFormType } from "@/types/form.type";
 import { Controller, useForm } from "react-hook-form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -7,49 +6,84 @@ import { SelectContent, SelectTrigger } from "@radix-ui/react-select";
 import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CategorySchema from "@/schema/category.schema";
-import { ChangeEvent, useRef } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { X } from "lucide-react";
+import { z } from "zod";
+
+const MAX_FILE_SIZE = 4 * 1024 * 1024; // 5 MB
+
+type CategoryForm = {
+  categoryId: number;
+  categoryName: string;
+  image: File;
+  status: string;
+};
+type CategoryFormProps = {
+  categoryId?: number;
+  categoryName?: string;
+  status?: string;
+  imageUrl?: string;
+  onSubmit: (value: z.infer<typeof CategorySchema>) => void;
+};
 
 export default function CategoryForm({
   categoryId = 0,
   categoryName = "",
   imageUrl = "",
   status = "active",
-}: CategoryFormType) {
+  onSubmit,
+}: CategoryFormProps) {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [imagePreview, setImagePreview] = useState<string>(imageUrl);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const {
-    handleSubmit,
     control,
+    handleSubmit,
     setValue,
+    setError,
     formState: { errors },
-  } = useForm({
+  } = useForm<CategoryForm>({
     defaultValues: {
       categoryId,
       categoryName,
-      imageUrl,
       status,
     },
     resolver: zodResolver(CategorySchema),
   });
 
-  const onSubmit = (data: CategoryFormType) => console.log({ data });
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
+    if (file && file.size > MAX_FILE_SIZE) {
+      setError("image", {
+        message: "File size exceeds the limit. Please choose a smaller file.",
+      });
+      return;
+    }
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setValue("imageUrl", reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
+      setValue("image", file);
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+    }
+  }
+
+  function submitHandler(value: z.infer<typeof CategorySchema>) {
+    try {
+      setLoading(true);
+      if (!value.image && !imagePreview) {
+        setError("image", { message: "Invalid" });
+        return;
+      }
+
+      onSubmit(value);
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(submitHandler)}
       className="p-4 space-y-4 rounded-lg border hover:border-blue-600  border-neutral-200 dark:border-neutral-800 w-full md:w-[50%]"
     >
       <div className="flex flex-col space-y-2">
@@ -65,30 +99,32 @@ export default function CategoryForm({
       </div>
 
       <div className="flex flex-col space-y-2">
-        <Label htmlFor="imageUrl">Category Image</Label>
+        <Label htmlFor="image">Category Image</Label>
         <Controller
           control={control}
-          name="imageUrl"
+          name="image"
           render={({ field }) => (
             <div className="space-y-2">
               <Input
-                id="categoryImage"
-                onChange={handleImageUpload}
+                id="image"
                 type="file"
-                ref={fileInputRef}
                 accept="image/*"
+                onChange={handleImageUpload}
+                ref={fileInputRef}
               />
-              {field.value ? (
+              {imagePreview ? (
                 <div className="relative rounded-md border aspect-square w-20">
                   <X
                     className="absolute right-1 top-1 h-4 w-4 cursor-pointer rounded-full "
+                    type="button"
                     onClick={() => {
                       field.onChange("");
                       if (fileInputRef.current) fileInputRef.current.value = "";
+                      setImagePreview("");
                     }}
                   />
                   <img
-                    src={field.value}
+                    src={imagePreview}
                     className="h-full w-full object-contain transition duration-300 ease-in-out group-hover:scale-105 "
                   />
                 </div>
@@ -98,8 +134,12 @@ export default function CategoryForm({
             </div>
           )}
         />
-        {errors.imageUrl && (
-          <span className="text-red-500">{errors.imageUrl.message}</span>
+        {errors.image && (
+          <span className="text-red-500">
+            {errors.image.type === "custom"
+              ? "Invalid image"
+              : errors.image.message}
+          </span>
         )}
       </div>
 
@@ -131,7 +171,12 @@ export default function CategoryForm({
         )}
       </div>
 
-      <Button type="submit" variant="outline" className="w-full">
+      <Button
+        type="submit"
+        variant="outline"
+        className="w-full"
+        disabled={loading}
+      >
         Submit
       </Button>
     </form>
