@@ -1,19 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { Button } from "../ui/button";
-import { Pencil, Trash2 } from "lucide-react";
 import { DataTableColumnHeader } from "../ui/data-table/column-header";
-import { Link } from "react-router-dom";
+import CategoryActions from "../category/table-actions";
+import { z } from "zod";
+import { ZodCategory } from "@/schema/category.schema";
 
-export type Column = {
-  categoryId: number;
-  categoryName: string;
-  createdOn: string;
-  imageUrl: string;
-  status: string;
-};
-
-export const columns: ColumnDef<Column>[] = [
+export const columns: ColumnDef<z.infer<typeof ZodCategory>>[] = [
   {
     accessorKey: "categoryName",
     header: ({ column }) => (
@@ -50,17 +42,6 @@ export const columns: ColumnDef<Column>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => (
-      <span className="flex space-x-2">
-        <Link to={`edit/${row.original.categoryId}`}>
-          <Button size={"icon"} variant={"outline"}>
-            <Pencil className="h-4 w-4" />
-          </Button>
-        </Link>
-        <Button size={"icon"} variant={"outline"}>
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </span>
-    ),
+    cell: ({ row }) => <CategoryActions row={row} />,
   },
 ];

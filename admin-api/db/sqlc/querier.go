@@ -11,6 +11,7 @@ import (
 type Querier interface {
 	CountUser(ctx context.Context, lower string) (int64, error)
 	CreateCategory(ctx context.Context, arg CreateCategoryParams) error
+	DeleteCategory(ctx context.Context, categoryID int32) error
 	DeleteOneProduct(ctx context.Context, productID int32) error
 	FindAdminUser(ctx context.Context, lower string) (FindAdminUserRow, error)
 	ReadCategory(ctx context.Context) ([]Category, error)

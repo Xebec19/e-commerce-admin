@@ -3,11 +3,13 @@ import { useToast } from "@/components/ui/use-toast";
 import { createCategory } from "@/lib/http/category";
 import CategorySchema from "@/schema/category.schema";
 import { useNavigate } from "react-router-dom";
+import { useSWRConfig } from "swr";
 import { z } from "zod";
 
 export default function CreateCategoriesPage() {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { mutate } = useSWRConfig();
 
   async function onSubmit(value: z.infer<typeof CategorySchema>) {
     try {
@@ -20,6 +22,8 @@ export default function CreateCategoriesPage() {
       });
 
       navigate("/dashboard/category");
+
+      mutate("category/list");
     } catch (error: unknown) {
       console.error(error);
       toast({

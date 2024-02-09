@@ -26,9 +26,20 @@ func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) 
 	return err
 }
 
+const deleteCategory = `-- name: DeleteCategory :exec
+UPDATE public.categories SET
+status = 'inactive'::enum_status
+WHERE category_id = $1
+`
+
+func (q *Queries) DeleteCategory(ctx context.Context, categoryID int32) error {
+	_, err := q.db.ExecContext(ctx, deleteCategory, categoryID)
+	return err
+}
+
 const readCategory = `-- name: ReadCategory :many
 SELECT category_id, category_name, created_on, image_url, status
-FROM public.categories order by created_on desc
+FROM public.categories WHERE status = 'active'::enum_status order by created_on desc
 `
 
 func (q *Queries) ReadCategory(ctx context.Context) ([]Category, error) {
