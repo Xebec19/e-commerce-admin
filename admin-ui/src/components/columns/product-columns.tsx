@@ -1,10 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { Button } from "../ui/button";
-import { Pencil, Trash2 } from "lucide-react";
 import { DataTableColumnHeader } from "../ui/data-table/column-header";
 import { z } from "zod";
 import ProductSchema from "@/schema/product.schema";
+import ProductActions from "../product/table-actions";
 
 export const columns: ColumnDef<z.infer<typeof ProductSchema>>[] = [
   // {
@@ -94,15 +93,6 @@ export const columns: ColumnDef<z.infer<typeof ProductSchema>>[] = [
   {
     id: "actions",
     header: "Actions",
-    accessorFn: () => {
-      <span className="flex space-x-2">
-        <Button size={"icon"}>
-          <Pencil className="h-4 w-4" />
-        </Button>
-        <Button size={"icon"}>
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </span>;
-    },
+    cell: ({ row }) => <ProductActions row={row} />,
   },
 ];

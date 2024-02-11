@@ -8,10 +8,11 @@ import { Select, SelectItem, SelectValue } from "../ui/select";
 import { SelectContent, SelectTrigger } from "@radix-ui/react-select";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
+import { useEffect } from "react";
 
 export default function ProductFormComponent({
-  productId = "",
-  categoryId = "",
+  product_id = "",
+  category_id = "",
   productName = "",
   price = 0,
   deliveryPrice = 0,
@@ -41,10 +42,14 @@ export default function ProductFormComponent({
 
   const onSubmit = (data: ProductFormType) => console.log({ data });
 
+  useEffect(() => {
+    console.log({ errors });
+  }, [errors]);
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-4 grid grid-cols-1 gap-4 rounded-lg border bg-white hover:border-blue-600 dark:bg-black relative border-neutral-200 dark:border-neutral-800 w-full md:w-[50%]"
+      className="p-4 grid grid-cols-1 gap-4 rounded-lg border  hover:border-blue-600 elative border-neutral-200 dark:border-neutral-800 w-full md:w-[50%]"
     >
       <div className="flex flex-col space-y-2">
         <Label htmlFor="productName">Name</Label>
@@ -94,14 +99,14 @@ export default function ProductFormComponent({
               value={field.value}
               onValueChange={(value) => field.onChange(value)}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] border rounded-md px-3 py-2">
                 <SelectValue
                   id="gender"
                   placeholder="Gender"
-                  className="border w-full"
+                  className="border w-full bg-foreground"
                 />
               </SelectTrigger>
-              <SelectContent className="bg-background border">
+              <SelectContent className="bg-background border rounded-md px-3 py-2">
                 <SelectItem value="male">Male</SelectItem>
                 <SelectItem value="female">Female</SelectItem>
               </SelectContent>
@@ -135,14 +140,14 @@ export default function ProductFormComponent({
               value={field.value}
               onValueChange={(value) => field.onChange(value)}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] border rounded-md px-3 py-2">
                 <SelectValue
                   id="categoryId"
                   placeholder="Category"
-                  className="border w-full"
+                  className="border w-full bg-foreground"
                 />
               </SelectTrigger>
-              <SelectContent className="bg-background border">
+              <SelectContent className="bg-background border rounded-md px-3 py-2">
                 <SelectItem value="male">Male</SelectItem>
                 <SelectItem value="female">Female</SelectItem>
               </SelectContent>
@@ -178,14 +183,14 @@ export default function ProductFormComponent({
               value={field.value}
               onValueChange={(value) => field.onChange(value)}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] border rounded-md px-3 py-2">
                 <SelectValue
                   id="status"
                   placeholder="Status"
-                  className="border w-full"
+                  className="border w-full bg-foreground"
                 />
               </SelectTrigger>
-              <SelectContent className="bg-background border">
+              <SelectContent className="bg-background border rounded-md px-3 py-2">
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="inactive">Inactive</SelectItem>
               </SelectContent>
