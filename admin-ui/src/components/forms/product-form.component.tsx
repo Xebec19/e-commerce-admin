@@ -1,4 +1,3 @@
-import ProductSchema from "@/schema/product.schema";
 import { ProductFormType } from "@/types/form.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -9,35 +8,27 @@ import { SelectContent, SelectTrigger } from "@radix-ui/react-select";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { useEffect } from "react";
+import ZodProduct from "@/schema/product.schema";
 
 export default function ProductFormComponent({
-  product_id = "",
-  category_id = "",
-  productName = "",
-  price = 0,
-  deliveryPrice = 0,
-  gender = "male",
-  productDesc = "",
+  product_id = 0,
+  product_name = "",
+  featured_image = "",
+  image_url = [],
   quantity = 0,
-  status = "active",
+  price = 0,
+  delivery_price = 0,
+  product_desc = "",
+  gender = "",
+  category_id = "",
 }: ProductFormType) {
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm<ProductFormType>({
-    defaultValues: {
-      productId,
-      categoryId,
-      productName,
-      price,
-      deliveryPrice,
-      gender,
-      productDesc,
-      quantity,
-      status,
-    },
-    resolver: zodResolver(ProductSchema),
+    defaultValues: {},
+    resolver: zodResolver(ZodProduct),
   });
 
   const onSubmit = (data: ProductFormType) => console.log({ data });
