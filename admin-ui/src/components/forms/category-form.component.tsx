@@ -9,8 +9,7 @@ import CategorySchema from "@/schema/category.schema";
 import { ChangeEvent, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { z } from "zod";
-
-const MAX_FILE_SIZE = 4 * 1024 * 1024; // 5 MB
+import { MAX_FILE_SIZE } from "@/lib/utils";
 
 type CategoryForm = {
   categoryId: number;

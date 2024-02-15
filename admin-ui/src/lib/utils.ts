@@ -1,6 +1,8 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+export const MAX_FILE_SIZE = 4 * 1024 * 1024;
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
