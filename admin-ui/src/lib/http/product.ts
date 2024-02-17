@@ -29,3 +29,11 @@ export async function getProductAPI() {
     })) || []
   );
 }
+
+export async function deleteProduct(
+  id: string
+): Promise<AxiosResponse<IPayload<never>>> {
+  const url = "/product/" + id;
+  const response = await requestAPI.delete(url);
+  return response.data;
+}

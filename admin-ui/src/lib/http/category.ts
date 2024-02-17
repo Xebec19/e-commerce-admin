@@ -67,3 +67,11 @@ export async function editCategory(value: z.infer<typeof CategorySchema>) {
 
   return response.data;
 }
+
+export async function deleteCategory(
+  id: string
+): Promise<AxiosResponse<IPayload<never>>> {
+  const url = `/category/${id}`;
+
+  return requestAPI.delete(url);
+}

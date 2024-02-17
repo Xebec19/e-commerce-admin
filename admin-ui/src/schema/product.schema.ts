@@ -1,18 +1,16 @@
 import { z } from "zod";
 
-const ProductSchema = z.object({
-  product_id: z.number(),
-  image_url: z.string(),
-  category_id: z.number(),
-  category_name: z.string(),
-  product_name: z.string().min(1, "Name is required"),
+const ZodProduct = z.object({
+  product_id: z.number().optional(),
+  product_name: z.string().min(1, "required"),
+  featured_image: z.string().min(1, "required"),
+  image_url: z.array(z.string()),
+  quantity: z.number(),
   price: z.number(),
   delivery_price: z.number(),
-  gender: z.enum(["male", "female"]),
   product_desc: z.string(),
-  quantity: z.number(),
-  created_on: z.string(),
-  total_count: z.number(),
+  gender: z.string(),
+  category_id: z.number(),
 });
 
-export default ProductSchema;
+export default ZodProduct;

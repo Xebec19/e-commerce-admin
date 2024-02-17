@@ -1,4 +1,3 @@
-import ProductSchema from "@/schema/product.schema";
 import { ProductFormType } from "@/types/form.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -8,17 +7,19 @@ import { Select, SelectItem, SelectValue } from "../ui/select";
 import { SelectContent, SelectTrigger } from "@radix-ui/react-select";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
+import ZodProduct from "@/schema/product.schema";
 
 export default function ProductFormComponent({
-  productId = "",
-  categoryId = "",
-  productName = "",
-  price = 0,
-  deliveryPrice = 0,
-  gender = "male",
-  productDesc = "",
+  product_id = "",
+  product_name = "",
+  featured_image = "",
+  image_url = [],
   quantity = 0,
-  status = "active",
+  price = 0,
+  delivery_price = 0,
+  product_desc = "",
+  gender = "",
+  category_id = 0,
 }: ProductFormType) {
   const {
     handleSubmit,
@@ -26,17 +27,18 @@ export default function ProductFormComponent({
     formState: { errors },
   } = useForm<ProductFormType>({
     defaultValues: {
-      productId,
-      categoryId,
-      productName,
-      price,
-      deliveryPrice,
-      gender,
-      productDesc,
+      product_id,
+      product_name,
+      featured_image,
+      image_url,
       quantity,
-      status,
+      price,
+      delivery_price,
+      product_desc,
+      gender,
+      category_id,
     },
-    resolver: zodResolver(ProductSchema),
+    resolver: zodResolver(ZodProduct),
   });
 
   const onSubmit = (data: ProductFormType) => console.log({ data });
@@ -44,17 +46,17 @@ export default function ProductFormComponent({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-4 grid grid-cols-1 gap-4 rounded-lg border bg-white hover:border-blue-600 dark:bg-black relative border-neutral-200 dark:border-neutral-800 w-full md:w-[50%]"
+      className="p-4 grid grid-cols-1 gap-4 rounded-lg border  hover:border-blue-600 elative border-neutral-200 dark:border-neutral-800 w-full md:w-[50%]"
     >
       <div className="flex flex-col space-y-2">
-        <Label htmlFor="productName">Name</Label>
+        <Label htmlFor="product_name">Name</Label>
         <Controller
           control={control}
-          name="productName"
-          render={({ field }) => <Input id="productName" {...field} />}
+          name="product_name"
+          render={({ field }) => <Input id="product_name" {...field} />}
         />
-        {errors.productName && (
-          <span className="text-red-500">{errors.productName.message}</span>
+        {errors.product_name && (
+          <span className="text-red-500">{errors.product_name.message}</span>
         )}
       </div>
 
@@ -71,16 +73,16 @@ export default function ProductFormComponent({
       </div>
 
       <div className="flex flex-col space-y-2">
-        <Label htmlFor="deliveryPrice">Delivery Price</Label>
+        <Label htmlFor="delivery_price">Delivery Price</Label>
         <Controller
           control={control}
-          name="deliveryPrice"
+          name="delivery_price"
           render={({ field }) => (
-            <Input id="deliveryPrice" type="number" {...field} />
+            <Input id="delivery_price" type="number" {...field} />
           )}
         />
-        {errors.deliveryPrice && (
-          <span className="text-red-500">{errors.deliveryPrice.message}</span>
+        {errors.delivery_price && (
+          <span className="text-red-500">{errors.delivery_price.message}</span>
         )}
       </div>
 
@@ -94,14 +96,14 @@ export default function ProductFormComponent({
               value={field.value}
               onValueChange={(value) => field.onChange(value)}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] border rounded-md px-3 py-2">
                 <SelectValue
                   id="gender"
                   placeholder="Gender"
-                  className="border w-full"
+                  className="border w-full bg-foreground"
                 />
               </SelectTrigger>
-              <SelectContent className="bg-background border">
+              <SelectContent className="bg-background border rounded-md px-3 py-2">
                 <SelectItem value="male">Male</SelectItem>
                 <SelectItem value="female">Female</SelectItem>
               </SelectContent>
@@ -114,43 +116,43 @@ export default function ProductFormComponent({
       </div>
 
       <div className="flex flex-col space-y-2">
-        <Label htmlFor="productDesc">Description</Label>
+        <Label htmlFor="product_desc">Description</Label>
         <Controller
           control={control}
-          name="productDesc"
-          render={({ field }) => <Textarea id="productDesc" {...field} />}
+          name="product_desc"
+          render={({ field }) => <Textarea id="product_desc" {...field} />}
         />
-        {errors.productDesc && (
-          <span className="text-red-500">{errors.productDesc.message}</span>
+        {errors.product_desc && (
+          <span className="text-red-500">{errors.product_desc.message}</span>
         )}
       </div>
 
       <div className="flex flex-col space-y-2">
-        <Label htmlFor="categoryId">Category</Label>
+        <Label htmlFor="category_id">Category</Label>
         <Controller
           control={control}
-          name="categoryId"
+          name="category_id"
           render={({ field }) => (
             <Select
-              value={field.value}
+              value={field.value + ""}
               onValueChange={(value) => field.onChange(value)}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] border rounded-md px-3 py-2">
                 <SelectValue
-                  id="categoryId"
+                  id="category_id"
                   placeholder="Category"
-                  className="border w-full"
+                  className="border w-full bg-foreground"
                 />
               </SelectTrigger>
-              <SelectContent className="bg-background border">
+              <SelectContent className="bg-background border rounded-md px-3 py-2">
                 <SelectItem value="male">Male</SelectItem>
                 <SelectItem value="female">Female</SelectItem>
               </SelectContent>
             </Select>
           )}
         />
-        {errors.categoryId && (
-          <span className="text-red-500">{errors.categoryId.message}</span>
+        {errors.category_id && (
+          <span className="text-red-500">{errors.category_id.message}</span>
         )}
       </div>
 
@@ -165,35 +167,6 @@ export default function ProductFormComponent({
         />
         {errors.quantity && (
           <span className="text-red-500">{errors.quantity.message}</span>
-        )}
-      </div>
-
-      <div className="flex flex-col space-y-2">
-        <Label htmlFor="status">Status</Label>
-        <Controller
-          control={control}
-          name="status"
-          render={({ field }) => (
-            <Select
-              value={field.value}
-              onValueChange={(value) => field.onChange(value)}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue
-                  id="status"
-                  placeholder="Status"
-                  className="border w-full"
-                />
-              </SelectTrigger>
-              <SelectContent className="bg-background border">
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
-              </SelectContent>
-            </Select>
-          )}
-        />
-        {errors.status && (
-          <span className="text-red-500">{errors.status.message}</span>
         )}
       </div>
 

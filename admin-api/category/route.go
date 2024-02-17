@@ -8,4 +8,5 @@ func SetRoute(app *fiber.App) {
 	router.Get("/list/:id", getCategoryById)
 	router.Post("/create", createCategory)
 	router.Post("/edit", updateCategory)
+	router.Delete("/:id", deleteCategory)
 }

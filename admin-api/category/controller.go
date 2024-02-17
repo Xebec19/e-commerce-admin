@@ -105,3 +105,15 @@ func updateCategory(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusCreated).JSON(util.SuccessResponse(nil, "category updated"))
 }
+
+func deleteCategory(c *fiber.Ctx) error {
+	categoryID, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return err
+	}
+
+	db.DBQuery.DeleteCategory(c.Context(), int32(categoryID))
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(nil, "category deleted"))
+	return nil
+}
