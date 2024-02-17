@@ -46,7 +46,7 @@ export default function ProductFormComponent({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-4 grid grid-cols-1 gap-4 rounded-lg border  hover:border-blue-600 elative border-neutral-200 dark:border-neutral-800 w-full md:w-[50%]"
+      className="p-4 grid grid-cols-1 gap-4 rounded-lg border  hover:border-blue-600 border-neutral-200 dark:border-neutral-800 w-full md:w-[50%]"
     >
       <div className="flex flex-col space-y-2">
         <Label htmlFor="product_name">Name</Label>
