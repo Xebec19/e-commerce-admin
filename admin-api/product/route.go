@@ -7,4 +7,5 @@ func SetRoute(app *fiber.App) {
 	router.Get("/list", getProducts)
 	router.Get("/:id", getProductById)
 	router.Delete("/:id", deleteProduct)
+	router.Post("/", createProduct)
 }

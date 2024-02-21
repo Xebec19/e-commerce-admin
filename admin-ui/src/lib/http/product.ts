@@ -37,3 +37,11 @@ export async function deleteProduct(
   const response = await requestAPI.delete(url);
   return response.data;
 }
+
+export async function createProduct(
+  payload: FormData
+): Promise<AxiosResponse<IPayload<never>>> {
+  const url = "/product";
+
+  return requestAPI.post(url, payload);
+}
