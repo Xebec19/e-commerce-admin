@@ -46,3 +46,27 @@ export async function createProduct(
 
   return requestAPI.post(url, payload);
 }
+
+export async function getProductByIdAPI(id: string) {
+  const url = `/product/${id}`;
+
+  const response = await requestAPI(url);
+
+  const product = response.data.payload;
+
+  return ProductSchema.parse({
+    product_id: product.product_id,
+    image_url: product.image_url,
+    category_id: product.category_id,
+    category_name: product.category_name,
+    product_name: product.product_name,
+    price: product.price.Int32,
+    delivery_price: product.delivery_price.Int32,
+    gender: product.gender.enum_gender,
+    product_desc: product.product_desc.String,
+    quantity: product.quantity.Int32,
+    created_on: product.created_on.Time,
+    total_count: product.total_count,
+    country_id: product.country_id,
+  });
+}
