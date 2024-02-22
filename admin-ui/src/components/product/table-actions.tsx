@@ -7,7 +7,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { z } from "zod";
-import ProductSchema from "@/schema/product.schema";
+import { ZodProduct as ProductSchema } from "@/schema/product.schema";
 import { deleteProduct } from "@/lib/http/product";
 
 interface ProductActionProps extends HTMLAttributes<HTMLDivElement> {
@@ -27,7 +27,7 @@ export default function ProductActions({ row, className }: ProductActionProps) {
       }
 
       const response = await deleteProduct(id);
-      if (!response.data.status) {
+      if (!response.status) {
         throw new Error("request failed");
       }
       toast({

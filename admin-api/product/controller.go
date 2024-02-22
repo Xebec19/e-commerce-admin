@@ -52,13 +52,14 @@ func deleteProduct(c *fiber.Ctx) error {
 }
 
 type ProductForm struct {
-	CategoryID    int32         `json:"category_id" binding:"required"`
-	ProductName   string        `json:"product_name"  binding:"required"`
-	Price         int32         `json:"price"  binding:"required"`
-	DeliveryPrice int32         `json:"delivery_price"  binding:"required"`
-	Gender        db.EnumGender `json:"gender"  binding:"required"`
-	ProductDesc   string        `json:"product_desc"  binding:"required"`
-	Quantity      int32         `json:"quantity"  binding:"required"`
+	Category_ID    int32         `json:"category_id" binding:"required"`
+	Product_Name   string        `json:"product_name"  binding:"required"`
+	Price          int32         `json:"price"  binding:"required"`
+	Delivery_Price int32         `json:"delivery_price"  binding:"required"`
+	Gender         db.EnumGender `json:"gender"  binding:"required"`
+	Product_Desc   string        `json:"product_desc"  binding:"required"`
+	Quantity       int32         `json:"quantity"  binding:"required"`
+	Country_ID     int32         `json:"country_id"  binding:"required"`
 }
 
 func createProduct(c *fiber.Ctx) error {
@@ -100,13 +101,14 @@ func createProduct(c *fiber.Ctx) error {
 	wg.Wait()
 
 	argv := db.CreateProductParams{
-		CategoryID:    sql.NullInt32{Int32: productData.CategoryID, Valid: true},
-		ProductName:   productData.ProductName,
+		CategoryID:    sql.NullInt32{Int32: productData.Category_ID, Valid: true},
+		ProductName:   productData.Product_Name,
 		Price:         sql.NullInt32{Int32: productData.Price, Valid: true},
-		DeliveryPrice: sql.NullInt32{Int32: productData.DeliveryPrice, Valid: true},
+		DeliveryPrice: sql.NullInt32{Int32: productData.Delivery_Price, Valid: true},
 		Gender:        db.NullEnumGender{EnumGender: productData.Gender, Valid: true},
-		ProductDesc:   sql.NullString{String: productData.ProductDesc, Valid: true},
+		ProductDesc:   sql.NullString{String: productData.Product_Desc, Valid: true},
 		Quantity:      sql.NullInt32{Int32: productData.Quantity, Valid: true},
+		CountryID:     sql.NullInt32{Int32: productData.Country_ID, Valid: true},
 	}
 
 	product, err := db.DBQuery.CreateProduct(c.Context(), argv)

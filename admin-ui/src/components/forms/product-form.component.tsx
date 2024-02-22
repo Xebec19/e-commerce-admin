@@ -12,32 +12,32 @@ import useSWR from "swr";
 import { getCategoryAPI } from "@/lib/http/category";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-import ZodProduct from "@/schema/product.schema";
+import { ZodProductForm as ZodProduct } from "@/schema/product.schema";
 import { useToast } from "../ui/use-toast";
 
 type ProductFormComponentProps = {
-  category_id?: string;
+  category_id?: number;
   product_name?: string;
-  price?: string;
-  delivery_price?: string;
+  price?: number;
+  delivery_price?: number;
   gender?: string;
   product_desc?: string;
-  quantity?: string;
-  country_id?: string;
+  quantity?: number;
+  country_id?: number;
   featured_image?: string;
   images?: string[];
   onSubmit: (val: z.infer<typeof ZodProduct>) => Promise<boolean>;
 };
 
 export default function ProductFormComponent({
-  category_id = "1",
+  category_id = 1,
   product_name = "",
-  price = "0",
-  delivery_price = "0",
+  price = 0,
+  delivery_price = 0,
   gender = "male",
   product_desc = "",
-  quantity = "0",
-  country_id = "1",
+  quantity = 0,
+  country_id = 1,
   featured_image = "",
   images = [],
   onSubmit,
@@ -61,13 +61,13 @@ export default function ProductFormComponent({
     reset,
   } = useForm<z.infer<typeof ZodProduct>>({
     defaultValues: {
-      category_id,
+      category_id: category_id + "",
       product_name,
-      price,
-      delivery_price,
+      price: price + "",
+      delivery_price: delivery_price + "",
       gender,
       product_desc,
-      quantity,
+      quantity: quantity + "",
       country_id,
       featured_image,
       images,
@@ -117,6 +117,8 @@ export default function ProductFormComponent({
       setError("featured_image", {
         message: "Image should be less than 5MB",
       });
+
+      return;
     }
 
     const url = URL.createObjectURL(file);
@@ -132,6 +134,12 @@ export default function ProductFormComponent({
 
     const urls = [];
     for (let i = 0; i < files.length; i++) {
+      if (files[i].size > MAX_FILE_SIZE) {
+        setError("images", {
+          message: "Image should be less than 5MB",
+        });
+        return;
+      }
       const url = URL.createObjectURL(files[i]);
       urls.push(url);
     }

@@ -2,7 +2,7 @@ import { IPayload } from "@/types/response.type";
 import requestAPI from "./request";
 import { IProductPayload } from "@/types/product.type";
 import { AxiosResponse } from "axios";
-import ProductSchema from "@/schema/product.schema";
+import { ZodProduct as ProductSchema } from "@/schema/product.schema";
 import { z } from "zod";
 
 export async function getProductAPI() {
@@ -26,6 +26,7 @@ export async function getProductAPI() {
       quantity: p.quantity.Int32,
       created_on: p.created_on.Time,
       total_count: p.total_count,
+      country_id: p.country_id,
     })) || []
   );
 }
