@@ -10,6 +10,75 @@ import (
 	"database/sql"
 )
 
+const createProduct = `-- name: CreateProduct :one
+INSERT INTO public.products
+(category_id, product_name, price, delivery_price, gender, product_desc, quantity, country_id )
+VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING product_id, category_id, product_name, price, delivery_price, gender, product_desc, quantity, country_id, created_on, updated_on, status
+`
+
+type CreateProductParams struct {
+	CategoryID    sql.NullInt32  `json:"category_id"`
+	ProductName   string         `json:"product_name"`
+	Price         sql.NullInt32  `json:"price"`
+	DeliveryPrice sql.NullInt32  `json:"delivery_price"`
+	Gender        NullEnumGender `json:"gender"`
+	ProductDesc   sql.NullString `json:"product_desc"`
+	Quantity      sql.NullInt32  `json:"quantity"`
+	CountryID     sql.NullInt32  `json:"country_id"`
+}
+
+func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (Product, error) {
+	row := q.db.QueryRowContext(ctx, createProduct,
+		arg.CategoryID,
+		arg.ProductName,
+		arg.Price,
+		arg.DeliveryPrice,
+		arg.Gender,
+		arg.ProductDesc,
+		arg.Quantity,
+		arg.CountryID,
+	)
+	var i Product
+	err := row.Scan(
+		&i.ProductID,
+		&i.CategoryID,
+		&i.ProductName,
+		&i.Price,
+		&i.DeliveryPrice,
+		&i.Gender,
+		&i.ProductDesc,
+		&i.Quantity,
+		&i.CountryID,
+		&i.CreatedOn,
+		&i.UpdatedOn,
+		&i.Status,
+	)
+	return i, err
+}
+
+const createProductImage = `-- name: CreateProductImage :exec
+INSERT INTO public.product_images
+(product_id, image_url, updated_by, is_featured)
+VALUES($1, $2, $3, $4)
+`
+
+type CreateProductImageParams struct {
+	ProductID  sql.NullInt32 `json:"product_id"`
+	ImageUrl   string        `json:"image_url"`
+	UpdatedBy  sql.NullInt32 `json:"updated_by"`
+	IsFeatured sql.NullBool  `json:"is_featured"`
+}
+
+func (q *Queries) CreateProductImage(ctx context.Context, arg CreateProductImageParams) error {
+	_, err := q.db.ExecContext(ctx, createProductImage,
+		arg.ProductID,
+		arg.ImageUrl,
+		arg.UpdatedBy,
+		arg.IsFeatured,
+	)
+	return err
+}
+
 const deleteOneProduct = `-- name: DeleteOneProduct :exec
 UPDATE public.products SET status = 'inactive' where product_id = $1
 `

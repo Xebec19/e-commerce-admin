@@ -2,16 +2,16 @@ import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { DataTableColumnHeader } from "../ui/data-table/column-header";
 import { z } from "zod";
-import ProductSchema from "@/schema/product.schema";
+import { ZodProduct as ProductSchema } from "@/schema/product.schema";
 import ProductActions from "../product/table-actions";
 
 export const columns: ColumnDef<z.infer<typeof ProductSchema>>[] = [
-  // {
-  //   accessorKey: "productId",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Product ID" />
-  //   ),
-  // },
+  {
+    accessorKey: "product_id",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Product ID" />
+    ),
+  },
   {
     accessorKey: "product_name",
     header: ({ column }) => (
@@ -87,7 +87,9 @@ export const columns: ColumnDef<z.infer<typeof ProductSchema>>[] = [
       <DataTableColumnHeader column={column} title="Created on" />
     ),
     cell: ({ row }) => (
-      <span>{format(new Date(row.getValue("created_on")), "dd/MM/yyyy")}</span>
+      <span>
+        {format(new Date(row.getValue("created_on")), "dd/MM/yyyy hh:mm a")}
+      </span>
     ),
   },
   {
