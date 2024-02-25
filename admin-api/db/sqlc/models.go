@@ -315,6 +315,7 @@ type Product struct {
 	CountryID     sql.NullInt32  `json:"country_id"`
 	CreatedOn     sql.NullTime   `json:"created_on"`
 	UpdatedOn     sql.NullTime   `json:"updated_on"`
+	UpdatedBy     sql.NullInt32  `json:"updated_by"`
 	Status        NullEnumStatus `json:"status"`
 }
 

@@ -25,8 +25,13 @@ export const ZodProductForm = z.object({
   product_desc: z.string(),
   quantity: z.string({ invalid_type_error: "Invalid" }),
   country_id: z.number({ invalid_type_error: "Invalid" }),
-  featured_image: z.any().refine((val) => val instanceof File, {
+  featured_image: z.any().refine((val) => !!val, {
     message: "Please upload an image",
   }),
   images: z.any(),
+});
+
+export const ZodProductImages = z.object({
+  img_id: z.number(),
+  image_url: z.string(),
 });

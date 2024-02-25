@@ -1,23 +1,40 @@
 import ProductFormComponent from "@/components/forms/product-form.component";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
-import { createProduct, getProductByIdAPI } from "@/lib/http/product";
+import {
+  getProductByIdAPI,
+  getProductImagesAPI,
+  updateProductAPI,
+} from "@/lib/http/product";
 import { ZodProductForm as ZodProduct } from "@/schema/product.schema";
-import { useParams } from "react-router-dom";
-import useSWR from "swr";
+import { useNavigate, useParams } from "react-router-dom";
+import useSWR, { useSWRConfig } from "swr";
 import { z } from "zod";
 
 export default function EditProduct() {
   const { toast } = useToast();
   const params = useParams();
+  const navigate = useNavigate();
   const id = params.id;
   const { data, isLoading } = useSWR(id ? `product/${id}` : null, () =>
     getProductByIdAPI(id!)
   );
+  const { mutate } = useSWRConfig();
+  const { data: images, isLoading: imagesLoading } = useSWR(
+    id ? `product/${id}/images` : null,
+    () => getProductImagesAPI(id!)
+  );
+
+  const payload = {
+    ...data,
+    featured_image: data?.image_url,
+    images: images?.length ? images.map((img) => img.image_url) : [],
+  };
 
   async function handleSubmit(val: z.infer<typeof ZodProduct>) {
     try {
       const payload = new FormData();
+      payload.append("product_id", id + "");
       payload.append("category_id", val.category_id + "");
       payload.append("product_name", val.product_name);
       payload.append("price", val.price + "");
@@ -31,15 +48,21 @@ export default function EditProduct() {
         payload.append("images", fi as Blob)
       );
 
-      const response = await createProduct(payload);
+      const response = await updateProductAPI(payload, id + "");
 
       if (!response.data.status) {
         throw new Error(response.data.message);
       }
 
       toast({
-        title: "Product added",
+        title: "Product updated",
       });
+
+      mutate(`product/${id}`);
+      mutate(`product/${id}/images`);
+      mutate("product");
+
+      navigate("/dashboard/product");
 
       return true;
     } catch (error) {
@@ -63,10 +86,10 @@ export default function EditProduct() {
   return (
     <div className="p-4">
       <h1 className="font-semibold pb-2">Edit Product</h1>
-      {isLoading ? (
+      {isLoading || imagesLoading ? (
         <ProductSkeleton />
       ) : (
-        <ProductFormComponent {...data} onSubmit={handleSubmit} />
+        <ProductFormComponent {...payload} onSubmit={handleSubmit} />
       )}
     </div>
   );

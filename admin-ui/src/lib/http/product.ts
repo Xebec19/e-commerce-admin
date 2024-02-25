@@ -2,7 +2,10 @@ import { IPayload } from "@/types/response.type";
 import requestAPI from "./request";
 import { IProductPayload } from "@/types/product.type";
 import { AxiosResponse } from "axios";
-import { ZodProduct as ProductSchema } from "@/schema/product.schema";
+import {
+  ZodProduct as ProductSchema,
+  ZodProductImages,
+} from "@/schema/product.schema";
 import { z } from "zod";
 
 export async function getProductAPI() {
@@ -69,4 +72,28 @@ export async function getProductByIdAPI(id: string) {
     total_count: product.total_count,
     country_id: product.country_id,
   });
+}
+
+export async function getProductImagesAPI(id: string) {
+  const url = `/product/${id}/images`;
+
+  const response = await (requestAPI(url) as Promise<
+    AxiosResponse<IPayload<z.infer<typeof ZodProductImages>[]>>
+  >);
+
+  const payload = response.data.payload.map((pi) => ({
+    img_id: pi.img_id,
+    image_url: pi.image_url,
+  }));
+
+  return z.array(ZodProductImages).parse(payload);
+}
+
+export async function updateProductAPI(
+  payload: FormData,
+  id: string
+): Promise<AxiosResponse<IPayload<never>>> {
+  const url = "/product/" + id;
+
+  return requestAPI.put(url, payload);
 }
