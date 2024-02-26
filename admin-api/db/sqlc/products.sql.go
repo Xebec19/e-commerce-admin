@@ -29,7 +29,7 @@ func (q *Queries) ActivateImages(ctx context.Context, arg ActivateImagesParams) 
 const createProduct = `-- name: CreateProduct :one
 INSERT INTO public.products
 (category_id, product_name, price, delivery_price, gender, product_desc, quantity, country_id )
-VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING product_id, category_id, product_name, price, delivery_price, gender, product_desc, quantity, country_id, created_on, updated_on, updated_by, status
+VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING product_id, category_id, product_name, price, delivery_price, gender, product_desc, quantity, country_id, created_on, updated_on, status
 `
 
 type CreateProductParams struct {
@@ -67,7 +67,6 @@ func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (P
 		&i.CountryID,
 		&i.CreatedOn,
 		&i.UpdatedOn,
-		&i.UpdatedBy,
 		&i.Status,
 	)
 	return i, err
@@ -227,7 +226,7 @@ func (q *Queries) ReadProducts(ctx context.Context) ([]ReadProductsRow, error) {
 const removeFeaturedProductImage = `-- name: RemoveFeaturedProductImage :exec
 UPDATE public.product_images
 SET status = 'inactive'
-WHERE product_id=$1 and is_featured=1
+WHERE product_id=$1 and is_featured=true
 `
 
 func (q *Queries) RemoveFeaturedProductImage(ctx context.Context, productID sql.NullInt32) error {

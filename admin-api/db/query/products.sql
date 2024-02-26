@@ -34,7 +34,7 @@ WHERE product_id=$1;
 -- name: RemoveFeaturedProductImage :exec
 UPDATE public.product_images
 SET status = 'inactive'
-WHERE product_id=$1 and is_featured=1;
+WHERE product_id=$1 and is_featured=true;
 
 -- name: RemoveImages :exec
 UPDATE public.product_images
