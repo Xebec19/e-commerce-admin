@@ -6,9 +6,11 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 type Querier interface {
+	ActivateImages(ctx context.Context, arg ActivateImagesParams) error
 	CountUser(ctx context.Context, lower string) (int64, error)
 	CreateCategory(ctx context.Context, arg CreateCategoryParams) error
 	CreateProduct(ctx context.Context, arg CreateProductParams) (Product, error)
@@ -22,12 +24,16 @@ type Querier interface {
 	ReadOrderCountDaywise(ctx context.Context) ([]ReadOrderCountDaywiseRow, error)
 	ReadOrderCountMonthwise(ctx context.Context) ([]ReadOrderCountMonthwiseRow, error)
 	ReadOrders(ctx context.Context) ([]ReadOrdersRow, error)
+	ReadProductImages(ctx context.Context, productID sql.NullInt32) ([]ReadProductImagesRow, error)
 	ReadProducts(ctx context.Context) ([]ReadProductsRow, error)
 	ReadUser(ctx context.Context, userID int32) (User, error)
 	ReadUserCountDaywise(ctx context.Context) ([]ReadUserCountDaywiseRow, error)
 	ReadUserCountMonthwise(ctx context.Context) ([]ReadUserCountMonthwiseRow, error)
+	RemoveFeaturedProductImage(ctx context.Context, productID sql.NullInt32) error
+	RemoveImages(ctx context.Context, productID sql.NullInt32) error
 	UpdateCategoryById(ctx context.Context, arg UpdateCategoryByIdParams) error
 	UpdateOneProduct(ctx context.Context, arg UpdateOneProductParams) error
+	UpdateProduct(ctx context.Context, arg UpdateProductParams) error
 }
 
 var _ Querier = (*Queries)(nil)

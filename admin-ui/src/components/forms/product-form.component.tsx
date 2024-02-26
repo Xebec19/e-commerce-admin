@@ -5,7 +5,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { ChangeEvent, useRef, useState } from "react";
 import { MAX_FILE_SIZE } from "@/lib/utils";
-import { X } from "lucide-react";
+import { FileUp, X } from "lucide-react";
 import { Select, SelectItem, SelectValue } from "../ui/select";
 import { SelectContent, SelectTrigger } from "@radix-ui/react-select";
 import useSWR from "swr";
@@ -42,8 +42,9 @@ export default function ProductFormComponent({
   images = [],
   onSubmit,
 }: ProductFormComponentProps) {
-  const [featImg, setFeatImg] = useState<string>();
-  const [productImg, setProductImg] = useState<string[]>();
+  const [featImg, setFeatImg] = useState<string>(featured_image);
+  const [productImg, setProductImg] = useState<string[]>(images);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { toast } = useToast();
 
@@ -57,6 +58,7 @@ export default function ProductFormComponent({
     control,
     setError,
     setValue,
+    watch,
     formState: { errors },
     reset,
   } = useForm<z.infer<typeof ZodProduct>>({
@@ -75,6 +77,8 @@ export default function ProductFormComponent({
     resolver: zodResolver(ZodProduct),
   });
 
+  const imagesVal = watch("images");
+
   function resetForm() {
     reset();
     setFeatImg("");
@@ -89,6 +93,7 @@ export default function ProductFormComponent({
 
   const submit = async (data: z.infer<typeof ZodProduct>) => {
     try {
+      setIsLoading(true);
       const response = await onSubmit(data);
       if (!response) {
         throw new Error("Request failed");
@@ -103,6 +108,8 @@ export default function ProductFormComponent({
         variant: "destructive",
         title: "Request failed",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -132,7 +139,7 @@ export default function ProductFormComponent({
       return;
     }
 
-    const urls = [];
+    const urls = [] as string[];
     for (let i = 0; i < files.length; i++) {
       if (files[i].size > MAX_FILE_SIZE) {
         setError("images", {
@@ -143,26 +150,20 @@ export default function ProductFormComponent({
       const url = URL.createObjectURL(files[i]);
       urls.push(url);
     }
-    setProductImg(urls);
-    setValue("images", files);
+    setValue("images", [...productImg, ...files]);
+    setProductImg((prevState) => [...prevState, ...urls]);
   }
 
   function removeImg(idx: number) {
     const tempFiles = Array.from(productImg || []).filter(
       (_, index) => index !== idx
     );
-    if (imgRef.current) {
-      const selectedFiles = imgRef.current?.files as FileList;
-      const dt = new DataTransfer();
-      Array.from(selectedFiles || []).forEach((prd, index) => {
-        if (index != idx) {
-          dt.items.add(prd);
-        }
-      });
-      imgRef.current.files = dt.files;
-      setValue("images", dt.files);
-    }
     setProductImg(tempFiles);
+
+    const tempVals = Array.from(imagesVal || []).filter(
+      (_, index) => index != idx
+    );
+    setValue("images", tempVals);
   }
 
   return (
@@ -195,9 +196,19 @@ export default function ProductFormComponent({
               <Input
                 id="featured_image"
                 type="file"
+                className="hidden"
                 onChange={handleFeatImgUpload}
                 ref={featImgRef}
               />
+              <Button
+                type="button"
+                variant={"outline"}
+                className="w-full"
+                onClick={() => featImgRef.current?.click()}
+              >
+                <FileUp className="size-4" />
+                &nbsp;&nbsp;<span>Upload Featured Image</span>
+              </Button>
               {featImg && (
                 <div className="relative">
                   <img
@@ -238,9 +249,19 @@ export default function ProductFormComponent({
                 type="file"
                 multiple
                 accept="image/*"
+                className="hidden"
                 ref={imgRef}
                 onChange={handleImgUpload}
               />
+              <Button
+                type="button"
+                variant={"outline"}
+                className="w-full"
+                onClick={() => imgRef.current?.click()}
+              >
+                <FileUp className="size-4" />
+                &nbsp;&nbsp;<span>Upload Images</span>
+              </Button>
               <div className="flex flex-wrap">
                 {Array.from(productImg || []).length > 0 ? (
                   productImg?.map((prd, index) => (
@@ -437,7 +458,7 @@ export default function ProductFormComponent({
         )}
       </div>
 
-      <Button type="submit" className="w-full">
+      <Button type="submit" className={"w-full"} disabled={isLoading}>
         Submit
       </Button>
     </form>

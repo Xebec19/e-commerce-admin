@@ -10,6 +10,22 @@ import (
 	"database/sql"
 )
 
+const activateImages = `-- name: ActivateImages :exec
+UPDATE public.product_images
+SET status = 'active'
+WHERE product_id=$1 and is_featured=false and status='inactive' and image_url=$2
+`
+
+type ActivateImagesParams struct {
+	ProductID sql.NullInt32 `json:"product_id"`
+	ImageUrl  string        `json:"image_url"`
+}
+
+func (q *Queries) ActivateImages(ctx context.Context, arg ActivateImagesParams) error {
+	_, err := q.db.ExecContext(ctx, activateImages, arg.ProductID, arg.ImageUrl)
+	return err
+}
+
 const createProduct = `-- name: CreateProduct :one
 INSERT INTO public.products
 (category_id, product_name, price, delivery_price, gender, product_desc, quantity, country_id )
@@ -114,6 +130,39 @@ func (q *Queries) ReadOneProduct(ctx context.Context, productID int32) (VProduct
 	return i, err
 }
 
+const readProductImages = `-- name: ReadProductImages :many
+select img_id, image_url from product_images 
+where product_id = $1 and is_featured=false and status = 'active'
+`
+
+type ReadProductImagesRow struct {
+	ImgID    int32  `json:"img_id"`
+	ImageUrl string `json:"image_url"`
+}
+
+func (q *Queries) ReadProductImages(ctx context.Context, productID sql.NullInt32) ([]ReadProductImagesRow, error) {
+	rows, err := q.db.QueryContext(ctx, readProductImages, productID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ReadProductImagesRow
+	for rows.Next() {
+		var i ReadProductImagesRow
+		if err := rows.Scan(&i.ImgID, &i.ImageUrl); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const readProducts = `-- name: ReadProducts :many
 SELECT product_id, product_name, image_url, quantity, created_on, price, delivery_price, product_desc, gender, category_id, category_name, country_id, country_name, count(product_id) over () as total_count
 FROM public.v_products
@@ -174,6 +223,28 @@ func (q *Queries) ReadProducts(ctx context.Context) ([]ReadProductsRow, error) {
 	return items, nil
 }
 
+const removeFeaturedProductImage = `-- name: RemoveFeaturedProductImage :exec
+UPDATE public.product_images
+SET status = 'inactive'
+WHERE product_id=$1 and is_featured=true
+`
+
+func (q *Queries) RemoveFeaturedProductImage(ctx context.Context, productID sql.NullInt32) error {
+	_, err := q.db.ExecContext(ctx, removeFeaturedProductImage, productID)
+	return err
+}
+
+const removeImages = `-- name: RemoveImages :exec
+UPDATE public.product_images
+SET status = 'inactive'
+WHERE product_id=$1 and is_featured=false and status='active'
+`
+
+func (q *Queries) RemoveImages(ctx context.Context, productID sql.NullInt32) error {
+	_, err := q.db.ExecContext(ctx, removeImages, productID)
+	return err
+}
+
 const updateOneProduct = `-- name: UpdateOneProduct :exec
 UPDATE public.products SET category_id = $1, product_name = $2, price = $3, delivery_price = $4, gender = $5, product_desc = $6, quantity = $7, updated_on = current_timestamp WHERE product_id = $8
 `
@@ -199,6 +270,39 @@ func (q *Queries) UpdateOneProduct(ctx context.Context, arg UpdateOneProductPara
 		arg.ProductDesc,
 		arg.Quantity,
 		arg.ProductID,
+	)
+	return err
+}
+
+const updateProduct = `-- name: UpdateProduct :exec
+UPDATE public.products
+SET product_name=$2, price=$3, delivery_price=$4, gender=$5, product_desc=$6, quantity=$7, country_id=$8, updated_on=CURRENT_TIMESTAMP, category_id=$9
+WHERE product_id=$1
+`
+
+type UpdateProductParams struct {
+	ProductID     int32          `json:"product_id"`
+	ProductName   string         `json:"product_name"`
+	Price         sql.NullInt32  `json:"price"`
+	DeliveryPrice sql.NullInt32  `json:"delivery_price"`
+	Gender        NullEnumGender `json:"gender"`
+	ProductDesc   sql.NullString `json:"product_desc"`
+	Quantity      sql.NullInt32  `json:"quantity"`
+	CountryID     sql.NullInt32  `json:"country_id"`
+	CategoryID    sql.NullInt32  `json:"category_id"`
+}
+
+func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) error {
+	_, err := q.db.ExecContext(ctx, updateProduct,
+		arg.ProductID,
+		arg.ProductName,
+		arg.Price,
+		arg.DeliveryPrice,
+		arg.Gender,
+		arg.ProductDesc,
+		arg.Quantity,
+		arg.CountryID,
+		arg.CategoryID,
 	)
 	return err
 }

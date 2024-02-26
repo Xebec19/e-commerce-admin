@@ -1,5 +1,4 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
 import { DataTableColumnHeader } from "../ui/data-table/column-header";
 import { z } from "zod";
 import { ZodProduct as ProductSchema } from "@/schema/product.schema";
@@ -49,19 +48,19 @@ export const columns: ColumnDef<z.infer<typeof ProductSchema>>[] = [
       </span>
     ),
   },
-  {
-    accessorKey: "delivery_price",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Delivery Price" />
-    ),
-    cell: ({ row }) => (
-      <span>
-        {typeof row.original.delivery_price === "number"
-          ? row.original.delivery_price.toFixed(2)
-          : "-"}
-      </span>
-    ),
-  },
+  // {
+  //   accessorKey: "delivery_price",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Delivery Price" />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <span>
+  //       {typeof row.original.delivery_price === "number"
+  //         ? row.original.delivery_price.toFixed(2)
+  //         : "-"}
+  //     </span>
+  //   ),
+  // },
   {
     accessorKey: "quantity",
     header: ({ column }) => (
@@ -75,23 +74,23 @@ export const columns: ColumnDef<z.infer<typeof ProductSchema>>[] = [
       </span>
     ),
   },
-  {
-    accessorKey: "gender",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Gender" />
-    ),
-  },
-  {
-    accessorKey: "created_on",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Created on" />
-    ),
-    cell: ({ row }) => (
-      <span>
-        {format(new Date(row.getValue("created_on")), "dd/MM/yyyy hh:mm a")}
-      </span>
-    ),
-  },
+  // {
+  //   accessorKey: "gender",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Gender" />
+  //   ),
+  // },
+  // {
+  //   accessorKey: "created_on",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Created on" />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <span>
+  //       {format(new Date(row.getValue("created_on")), "dd/MM/yyyy hh:mm a")}
+  //     </span>
+  //   ),
+  // },
   {
     id: "actions",
     header: "Actions",

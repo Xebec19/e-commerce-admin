@@ -16,7 +16,7 @@ export default function Navbar() {
       aria-roledescription="navigation bar"
       className="py-4 px-2 flex justify-between items-center container"
     >
-      <Link to={"/"} className="flex items-center">
+      <Link to={"/dashboard"} className="flex items-center">
         <div className="mr-2">
           <img src={logo} alt="logo" />
         </div>

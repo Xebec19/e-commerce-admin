@@ -7,4 +7,4 @@ from products bp
 join categories bc ON bp.category_id = bc.category_id 
 join countries bc2 on bc2.country_id = bp.country_id 
 join product_images pi2 on pi2.product_id = bp.product_id 
-where bp.status = 'active' and pi2.is_featured = true;
+where bp.status = 'active' and pi2.is_featured = true and pi2.status = 'active';
