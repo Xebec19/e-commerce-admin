@@ -12,3 +12,21 @@ group by date_trunc('month',created_on);
 select o.order_id, concat(u.first_name, ' ', u.last_name) as user_name, u.email,
 o.price, o.delivery_price, o.total, o.status, o.created_on, o.discount_amount, o.discount_code 
 from orders o join users u on o.user_id = u.user_id;
+
+-- name: ReadOrderById :one
+select order_id, concat(u.first_name, ' ', u.last_name) as user_name, 
+u.email, price, delivery_price, total, o.status, o.created_on, 
+concat(billing_first_name, ' ', billing_last_name) as billing_user_name, billing_email, billing_phone, billing_address,
+concat(shipping_first_name, ' ', shipping_last_name) as shipping_user_name, shipping_email, shipping_phone, shipping_address,
+discount_code, discount_amount
+from orders o 
+join users u on u.user_id = o.user_id 
+where order_id = $1;
+
+-- name: ReadOrderItems :many
+select od.od_id, p.product_id, p.product_name, p.price, p.delivery_price, od.quantity, 
+p.product_desc, p.status, p.country_id, c.category_id, c.category_name 
+from order_details od 
+join products p on p.product_id = od.product_id 
+join categories c on p.category_id = c.category_id 
+where od.order_id = $1; 
