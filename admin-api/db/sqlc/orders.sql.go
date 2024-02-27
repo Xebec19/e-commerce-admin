@@ -10,6 +10,64 @@ import (
 	"database/sql"
 )
 
+const readOrderById = `-- name: ReadOrderById :one
+select order_id, concat(u.first_name, ' ', u.last_name) as user_name, 
+u.email, price, delivery_price, total, o.status, o.created_on, 
+concat(billing_first_name, ' ', billing_last_name) as billing_user_name, billing_email, billing_phone, billing_address,
+concat(shipping_first_name, ' ', shipping_last_name) as shipping_user_name, shipping_email, shipping_phone, shipping_address,
+discount_code, discount_amount
+from orders o 
+join users u on u.user_id = o.user_id 
+where order_id = $1
+`
+
+type ReadOrderByIdRow struct {
+	OrderID          string              `json:"order_id"`
+	UserName         interface{}         `json:"user_name"`
+	Email            string              `json:"email"`
+	Price            sql.NullInt32       `json:"price"`
+	DeliveryPrice    sql.NullInt32       `json:"delivery_price"`
+	Total            sql.NullInt32       `json:"total"`
+	Status           NullEnumOrderStatus `json:"status"`
+	CreatedOn        sql.NullTime        `json:"created_on"`
+	BillingUserName  interface{}         `json:"billing_user_name"`
+	BillingEmail     string              `json:"billing_email"`
+	BillingPhone     sql.NullString      `json:"billing_phone"`
+	BillingAddress   sql.NullString      `json:"billing_address"`
+	ShippingUserName interface{}         `json:"shipping_user_name"`
+	ShippingEmail    string              `json:"shipping_email"`
+	ShippingPhone    sql.NullString      `json:"shipping_phone"`
+	ShippingAddress  sql.NullString      `json:"shipping_address"`
+	DiscountCode     sql.NullString      `json:"discount_code"`
+	DiscountAmount   sql.NullInt32       `json:"discount_amount"`
+}
+
+func (q *Queries) ReadOrderById(ctx context.Context, orderID string) (ReadOrderByIdRow, error) {
+	row := q.db.QueryRowContext(ctx, readOrderById, orderID)
+	var i ReadOrderByIdRow
+	err := row.Scan(
+		&i.OrderID,
+		&i.UserName,
+		&i.Email,
+		&i.Price,
+		&i.DeliveryPrice,
+		&i.Total,
+		&i.Status,
+		&i.CreatedOn,
+		&i.BillingUserName,
+		&i.BillingEmail,
+		&i.BillingPhone,
+		&i.BillingAddress,
+		&i.ShippingUserName,
+		&i.ShippingEmail,
+		&i.ShippingPhone,
+		&i.ShippingAddress,
+		&i.DiscountCode,
+		&i.DiscountAmount,
+	)
+	return i, err
+}
+
 const readOrderCountDaywise = `-- name: ReadOrderCountDaywise :many
 select to_char(date_trunc('day',created_on), 'YYYY-MM-DD') as day, count(*) as total_orders from orders 
 where created_on >= CURRENT_DATE - INTERVAL '4 months'
@@ -65,6 +123,64 @@ func (q *Queries) ReadOrderCountMonthwise(ctx context.Context) ([]ReadOrderCount
 	for rows.Next() {
 		var i ReadOrderCountMonthwiseRow
 		if err := rows.Scan(&i.Month, &i.TotalCount); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const readOrderItems = `-- name: ReadOrderItems :many
+select od.od_id, p.product_id, p.product_name, p.price, p.delivery_price, od.quantity, 
+p.product_desc, p.status, p.country_id, c.category_id, c.category_name 
+from order_details od 
+join products p on p.product_id = od.product_id 
+join categories c on p.category_id = c.category_id 
+where od.order_id = $1
+`
+
+type ReadOrderItemsRow struct {
+	OdID          int32          `json:"od_id"`
+	ProductID     int32          `json:"product_id"`
+	ProductName   string         `json:"product_name"`
+	Price         sql.NullInt32  `json:"price"`
+	DeliveryPrice sql.NullInt32  `json:"delivery_price"`
+	Quantity      int32          `json:"quantity"`
+	ProductDesc   sql.NullString `json:"product_desc"`
+	Status        NullEnumStatus `json:"status"`
+	CountryID     sql.NullInt32  `json:"country_id"`
+	CategoryID    int32          `json:"category_id"`
+	CategoryName  string         `json:"category_name"`
+}
+
+func (q *Queries) ReadOrderItems(ctx context.Context, orderID sql.NullString) ([]ReadOrderItemsRow, error) {
+	rows, err := q.db.QueryContext(ctx, readOrderItems, orderID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ReadOrderItemsRow
+	for rows.Next() {
+		var i ReadOrderItemsRow
+		if err := rows.Scan(
+			&i.OdID,
+			&i.ProductID,
+			&i.ProductName,
+			&i.Price,
+			&i.DeliveryPrice,
+			&i.Quantity,
+			&i.ProductDesc,
+			&i.Status,
+			&i.CountryID,
+			&i.CategoryID,
+			&i.CategoryName,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
