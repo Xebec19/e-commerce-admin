@@ -16,6 +16,7 @@ import ProductList from "./routes/dashboard/products/products-list.page";
 import OrderList from "./routes/dashboard/orders/order-list";
 import EditCategoryPage from "./routes/dashboard/categories/edit-categories.page";
 import EditProduct from "./routes/dashboard/products/edit-product";
+import OrderDetails from "./routes/dashboard/orders/order-details";
 
 const router = createBrowserRouter([
   {
@@ -76,7 +77,16 @@ const router = createBrowserRouter([
           },
           {
             path: "order",
-            element: <OrderList />,
+            children: [
+              {
+                path: "",
+                element: <OrderList />,
+              },
+              {
+                path: ":id",
+                element: <OrderDetails />,
+              },
+            ],
           },
         ],
       },
