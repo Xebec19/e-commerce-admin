@@ -4,6 +4,7 @@ import { z } from "zod";
 import { ZodOrder } from "@/schema/order.schema";
 import { format } from "date-fns";
 import OrderActions from "../order/table-actions";
+import { cn, getOrderStatusColor } from "@/lib/utils";
 
 export const columns: ColumnDef<z.infer<typeof ZodOrder>>[] = [
   {
@@ -58,6 +59,16 @@ export const columns: ColumnDef<z.infer<typeof ZodOrder>>[] = [
     accessorKey: "status",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Status" />
+    ),
+    cell: ({ row }) => (
+      <span
+        className={cn(
+          "uppercase ",
+          getOrderStatusColor(row.getValue("status"))
+        )}
+      >
+        {row.getValue("status")}
+      </span>
     ),
   },
   {
