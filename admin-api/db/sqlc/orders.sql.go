@@ -246,3 +246,17 @@ func (q *Queries) ReadOrders(ctx context.Context) ([]ReadOrdersRow, error) {
 	}
 	return items, nil
 }
+
+const updateOrderStatus = `-- name: UpdateOrderStatus :exec
+update orders set status = $1 where order_id = $2
+`
+
+type UpdateOrderStatusParams struct {
+	Status  NullEnumOrderStatus `json:"status"`
+	OrderID string              `json:"order_id"`
+}
+
+func (q *Queries) UpdateOrderStatus(ctx context.Context, arg UpdateOrderStatusParams) error {
+	_, err := q.db.ExecContext(ctx, updateOrderStatus, arg.Status, arg.OrderID)
+	return err
+}

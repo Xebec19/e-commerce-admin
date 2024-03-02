@@ -57,3 +57,28 @@ func getOrderDetails(c *fiber.Ctx) error {
 	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(payload, "orders fetched"))
 	return nil
 }
+
+type orderStatusRequest struct {
+	Status db.EnumOrderStatus `json:"status"`
+}
+
+func updateOrderStatus(c *fiber.Ctx) error {
+	orderId := c.Params("id")
+	req := new(orderStatusRequest)
+	if err := c.BodyParser(req); err != nil {
+		return err
+	}
+
+	arg := db.UpdateOrderStatusParams{
+		OrderID: orderId,
+		Status:  db.NullEnumOrderStatus{EnumOrderStatus: req.Status, Valid: true},
+	}
+
+	err := db.DBQuery.UpdateOrderStatus(c.Context(), arg)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	}
+
+	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(nil, "order status updated"))
+	return nil
+}
