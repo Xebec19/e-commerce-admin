@@ -19,3 +19,25 @@ export function getMonthName(monthNum: number) {
   const newDate = new Date(2022, monthNum - 1, 1);
   return newDate.toLocaleString("default", { month: "long" });
 }
+
+export function getOrderStatusColor(status: string) {
+  switch (status) {
+    case "processing":
+      return "text-yellow-500";
+
+    case "confirmed":
+      return "text-green-500";
+
+    case "delivered":
+      return "text-blue-500";
+
+    case "cancelled":
+      return "text-red-500";
+
+    case "refunded":
+      return "text-purple-500";
+
+    default:
+      return "text-gray-500";
+  }
+}

@@ -30,3 +30,6 @@ from order_details od
 join products p on p.product_id = od.product_id 
 join categories c on p.category_id = c.category_id 
 where od.order_id = $1; 
+
+-- name: UpdateOrderStatus :exec
+update orders set status = $1 where order_id = $2;
