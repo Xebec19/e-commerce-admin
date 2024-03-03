@@ -29,7 +29,8 @@ func main() {
 	app.Use(recover.New())
 
 	db.Connect()
-	cloud.SetupSession()
+	cloud.NewAWS()
+	cloud.NewEmailClient()
 
 	auth.SetRoute(app)
 
