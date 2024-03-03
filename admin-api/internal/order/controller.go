@@ -4,7 +4,7 @@ import (
 	"database/sql"
 
 	db "github.com/Xebec19/e-commerce-admin/admin-api/db/sqlc"
-	"github.com/Xebec19/e-commerce-admin/admin-api/util"
+	"github.com/Xebec19/e-commerce-admin/admin-api/internal/util"
 	"github.com/gofiber/fiber/v2"
 )
 

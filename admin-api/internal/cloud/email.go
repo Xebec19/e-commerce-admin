@@ -3,7 +3,7 @@ package cloud
 import (
 	"log"
 
-	"github.com/Xebec19/e-commerce-admin/admin-api/util"
+	"github.com/Xebec19/e-commerce-admin/admin-api/internal/util"
 	"github.com/resend/resend-go/v2"
 )
 
