@@ -119,3 +119,19 @@ export async function fetchOrderDetailsAPI(orderID: string) {
     })),
   });
 }
+
+export async function updateOrderAPI({
+  orderId,
+  status,
+}: {
+  orderId: string;
+  status: string;
+}): Promise<IPayload<never>> {
+  const url = `/order/${orderId}`;
+
+  const response = await (requestAPI.put(url, { status }) as Promise<
+    AxiosResponse<IPayload<never>>
+  >);
+
+  return response.data;
+}

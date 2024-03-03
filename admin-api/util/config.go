@@ -14,6 +14,7 @@ type Config struct {
 	AWSSecretKey  string `mapstructure:"AWS_SECRET_KEY"`
 	AWSBucketName string `mapstructure:"AWS_BUCKET_NAME"`
 	AWSRegion     string `mapstructure:"AWS_REGION"`
+	ResendApiKey  string `mapstructure:"RESEND_API_KEY"`
 }
 
 func LoadConfig(path string) (config Config, err error) {

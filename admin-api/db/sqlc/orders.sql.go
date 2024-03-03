@@ -247,6 +247,20 @@ func (q *Queries) ReadOrders(ctx context.Context) ([]ReadOrdersRow, error) {
 	return items, nil
 }
 
+const reduceQuantity = `-- name: ReduceQuantity :exec
+update products set quantity = GREATEST(0,quantity - $1) where product_id = $2
+`
+
+type ReduceQuantityParams struct {
+	Quantity  sql.NullInt32 `json:"quantity"`
+	ProductID int32         `json:"product_id"`
+}
+
+func (q *Queries) ReduceQuantity(ctx context.Context, arg ReduceQuantityParams) error {
+	_, err := q.db.ExecContext(ctx, reduceQuantity, arg.Quantity, arg.ProductID)
+	return err
+}
+
 const updateOrderStatus = `-- name: UpdateOrderStatus :exec
 update orders set status = $1 where order_id = $2
 `

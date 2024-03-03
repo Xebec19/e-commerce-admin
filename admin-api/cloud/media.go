@@ -14,7 +14,7 @@ import (
 
 var Uploader *s3manager.Uploader
 
-func SetupSession() {
+func NewAWS() {
 	config, err := util.LoadConfig(".")
 	if err != nil {
 		log.Fatal("cannot load config:", err)
