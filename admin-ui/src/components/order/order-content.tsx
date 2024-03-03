@@ -5,12 +5,66 @@ import { format } from "date-fns";
 import { X } from "lucide-react";
 import { z } from "zod";
 import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { useState } from "react";
+import { updateOrderAPI } from "@/lib/http/order";
+import { useToast } from "../ui/use-toast";
+import { AxiosError } from "axios";
+import { useSWRConfig } from "swr";
 
 type OrderContentProps = {
   orderDetails: z.infer<typeof ZodOrderDetails>;
 };
 
 export default function OrderContent({ orderDetails }: OrderContentProps) {
+  const [disabled, setDisabled] = useState<boolean>(false);
+  const { mutate } = useSWRConfig();
+
+  const { toast } = useToast();
+
+  async function updateOrderStatus({
+    orderId,
+    status,
+  }: {
+    orderId: string;
+    status: string;
+  }) {
+    if (!confirm("Are you sure ?")) {
+      return;
+    }
+    try {
+      setDisabled(true);
+      const response = await updateOrderAPI({ orderId, status });
+
+      if (!response.status) {
+        throw new Error(response.message);
+      }
+
+      toast({
+        title: "Order updated",
+        description: "Order status updated successfully",
+      });
+
+      mutate(`order/${orderId}`);
+      mutate("order-list");
+    } catch (error) {
+      console.error(error);
+      // @ts-expect-error error is of type Error
+      let message = error.message;
+      if (error instanceof AxiosError) {
+        message = error.response?.data?.message;
+      }
+
+      toast({
+        variant: "destructive",
+        title: "Something went wrong!",
+        description: message,
+      });
+    } finally {
+      setDisabled(false);
+    }
+  }
+
   return (
     <>
       <h1 className="font-semibold text-lg">Order Details</h1>
@@ -66,14 +120,45 @@ export default function OrderContent({ orderDetails }: OrderContentProps) {
 
           <div className="flex flex-col space-y-2">
             <span className="font-semibold">Status</span>
-            <span
-              className={cn(
-                "font-semibold uppercase",
-                getOrderStatusColor(orderDetails.order.status)
-              )}
-            >
-              {orderDetails.order.status}
-            </span>
+
+            {orderDetails.order.status === "processing" ? (
+              <div className="space-x-2">
+                <Button
+                  className="uppercase"
+                  disabled={disabled}
+                  onClick={() =>
+                    updateOrderStatus({
+                      orderId: orderDetails.order.order_id,
+                      status: "confirmed",
+                    })
+                  }
+                >
+                  Confirm
+                </Button>
+                <Button
+                  className="uppercase"
+                  variant={"destructive"}
+                  disabled={disabled}
+                  onClick={() =>
+                    updateOrderStatus({
+                      orderId: orderDetails.order.order_id,
+                      status: "cancelled",
+                    })
+                  }
+                >
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              <span
+                className={cn(
+                  "font-semibold uppercase",
+                  getOrderStatusColor(orderDetails.order.status)
+                )}
+              >
+                {orderDetails.order.status}
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col space-y-2">

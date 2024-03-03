@@ -79,6 +79,20 @@ func updateOrderStatus(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 	}
 
+	orderItems, err := db.DBQuery.ReadOrderItems(c.Context(), sql.NullString{String: orderId, Valid: true})
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
+	}
+
+	for _, item := range orderItems {
+		arg2 := db.ReduceQuantityParams{
+			ProductID: item.ProductID,
+			Quantity:  sql.NullInt32{Int32: item.Quantity, Valid: true},
+		}
+
+		db.DBQuery.ReduceQuantity(c.Context(), arg2)
+	}
+
 	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(nil, "order status updated"))
 	return nil
 }

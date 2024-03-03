@@ -10,5 +10,5 @@ func SetRoute(app *fiber.App) {
 	router.Get("/grouped-by-date", groupByDate)
 	router.Get("/grouped-by-month", groupByMonth)
 	router.Get("/:id", getOrderDetails)
-	router.Post("/:id", updateOrderStatus)
+	router.Put("/:id", updateOrderStatus)
 }
