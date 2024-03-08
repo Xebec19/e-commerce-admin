@@ -1,9 +1,30 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+package templates
+
+type Product struct {
+    name string
+    quantity int
+    price int
+}
+
+type OrderConfirmedProps struct {
+    orderId string
+    email string 
+    shippingAddress string 
+    products Product[]
+    subtotal string
+    deliveryTotal string 
+    discount string
+    discountAmt string
+    total string
+}
+
+templ OrderConfirmed(payload OrderConfirmedProps) {
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Title</title>
+    <title>Order Confirmed | Khushi Enterprises</title>
     <style>
       .wrapper {
         width: 100%;
@@ -1684,12 +1705,12 @@
                               <tr>
                                 <th>
                                   <h1>
-                                    Your Order Confirmation - [Order Number]
+                                    Your Order Confirmation - {payload.orderId}
                                   </h1>
                                   <p>
                                     We are thrilled to inform you that your
                                     order has been successfully confirmed! Thank
-                                    you for choosing [Your E-commerce Website]
+                                    you for choosing Khushi Enterprises
                                     for your shopping needs.
                                   </p>
                                   <table class="spacer">
@@ -1724,18 +1745,18 @@
                                                           >Payment
                                                           Method</strong
                                                         ><br />
-                                                        Dubloons
+                                                        Online
                                                       </p>
                                                       <p>
                                                         <strong
                                                           >Email Address</strong
                                                         ><br />
-                                                        thecapn@pirates.org
+                                                        {payload.email}
                                                       </p>
                                                       <p>
                                                         <strong>Order ID</strong
                                                         ><br />
-                                                        239235983749636
+                                                        {payload.orderId}
                                                       </p>
                                                     </th>
                                                   </tr>
@@ -1750,17 +1771,9 @@
                                                       <p>
                                                         <strong
                                                           >Shipping
-                                                          Method</strong
-                                                        ><br />
-                                                        Boat (1&ndash;2
-                                                        weeks)<br />
-                                                        <strong
-                                                          >Shipping
                                                           Address</strong
                                                         ><br />
-                                                        Captain Price<br />
-                                                        123 Maple Rd<br />
-                                                        Campbell, CA 95112
+                                                        {payload.shippingAddress}
                                                       </p>
                                                     </th>
                                                   </tr>
@@ -1780,42 +1793,36 @@
                                       <th>#</th>
                                       <th>Price</th>
                                     </tr>
-                                    <tr>
-                                      <td>Ship's Cannon</td>
-                                      <td>2</td>
-                                      <td>$100</td>
-                                    </tr>
-                                    <tr>
-                                      <td>Ship's Cannon</td>
-                                      <td>2</td>
-                                      <td>$100</td>
-                                    </tr>
-                                    <tr>
-                                      <td>Ship's Cannon</td>
-                                      <td>2</td>
-                                      <td>$100</td>
-                                    </tr>
+                                    {
+                                        for _, product := range payload.products {
+                                            <tr>
+                                            <td>{product.name}</td>
+                                            <td>{product.quantity}</td>
+                                            <td>{product.price}</td>
+                                            </tr>
+                                        }
+                                    }
                                     <tr>
                                       <td colspan="2"><b>Subtotal:</b></td>
-                                      <td>$600</td>
+                                      <td>{payload.subtotal}</td>
                                     </tr>
                                     <tr>
                                       <td colspan="2">
                                         <b>Delivery Charge:</b>
                                       </td>
-                                      <td>$600</td>
+                                      <td>{payload.deliveryTotal}</td>
                                     </tr>
                                     <tr>
                                       <td colspan="2">
-                                        <b>Discount:</b>
+                                        <b>{payload.discount}:</b>
                                       </td>
-                                      <td>$600</td>
+                                      <td>{payload.discountAmt}</td>
                                     </tr>
                                     <tr>
                                       <td colspan="2">
                                         <b>Total:</b>
                                       </td>
-                                      <td><b>$600</b></td>
+                                      <td><b>{payload.total}</b></td>
                                     </tr>
                                   </table>
                                   <hr />
@@ -1856,7 +1863,7 @@
                                 <th>
                                   <p>
                                     Call us at 800.555.1923<br />
-                                    Email us at support@discount.boat
+                                    Email us at support@khushi-enterprises.com
                                   </p>
                                 </th>
                               </tr>
@@ -1867,8 +1874,8 @@
                               <tr>
                                 <th>
                                   <p>
-                                    123 Maple Rd<br />
-                                    Campbell, CA 95112
+                                    3456, Roshanara Road<br/>
+                                    Delhi-110007
                                   </p>
                                 </th>
                               </tr>
@@ -1887,3 +1894,4 @@
     </table>
   </body>
 </html>
+}

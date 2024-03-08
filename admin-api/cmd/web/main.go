@@ -30,7 +30,7 @@ func main() {
 
 	db.Connect()
 	cloud.NewAWS()
-	cloud.NewEmailClient()
+	cloud.Email.NewEmailClient()
 
 	auth.SetRoute(app)
 
