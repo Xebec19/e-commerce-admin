@@ -2,8 +2,10 @@ package order
 
 import (
 	"database/sql"
+	"fmt"
 
 	db "github.com/Xebec19/e-commerce-admin/admin-api/db/sqlc"
+	"github.com/Xebec19/e-commerce-admin/admin-api/internal/cloud"
 	"github.com/Xebec19/e-commerce-admin/admin-api/internal/util"
 	"github.com/gofiber/fiber/v2"
 )
@@ -74,7 +76,7 @@ func updateOrderStatus(c *fiber.Ctx) error {
 		Status:  db.NullEnumOrderStatus{EnumOrderStatus: req.Status, Valid: true},
 	}
 
-	err := db.DBQuery.UpdateOrderStatus(c.Context(), arg)
+	orderDetails, err := db.DBQuery.UpdateOrderStatus(c.Context(), arg)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 	}
@@ -84,6 +86,15 @@ func updateOrderStatus(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 	}
 
+	if req.Status == db.EnumOrderStatusCancelled {
+		err = cloud.Email.OrderCancellationEmail(orderDetails, orderItems)
+		if err != nil {
+			fmt.Println(err)
+		}
+		c.Status(fiber.StatusOK).JSON(util.SuccessResponse(nil, "order status updated"))
+		return nil
+	}
+
 	for _, item := range orderItems {
 		arg2 := db.ReduceQuantityParams{
 			ProductID: item.ProductID,
@@ -91,6 +102,11 @@ func updateOrderStatus(c *fiber.Ctx) error {
 		}
 
 		db.DBQuery.ReduceQuantity(c.Context(), arg2)
+	}
+
+	err = cloud.Email.OrderConfirmationEmail(orderDetails, orderItems)
+	if err != nil {
+		fmt.Println(err)
 	}
 
 	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(nil, "order status updated"))

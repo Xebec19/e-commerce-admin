@@ -1,10 +1,30 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Title</title>
-    <style>
+package templates
+
+type Product struct {
+	Name     string
+	Quantity string
+	Price    string
+}
+
+type OrderCancelledProps struct {
+	OrderId         string
+	Email           string
+	ShippingAddress string
+	Products        []Product
+	Subtotal        string
+	DeliveryTotal   string
+	Discount        string
+	DiscountAmt     string
+	Total           string
+}
+
+templ OrderCancelled(payload OrderCancelledProps) {
+	<html>
+		<head>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+			<meta name="viewport" content="width=device-width"/>
+			<title>Order Confirmed | Khushi Enterprises</title>
+			<style>
       .wrapper {
         width: 100%;
       }
@@ -1635,255 +1655,237 @@
         }
       }
     </style>
-
-    <style>
+			<style>
       body,
       html,
       .body {
         background: #f3f3f3 !important;
       }
     </style>
-  </head>
-
-  <body>
-    <!-- <style> -->
-    <table class="body" data-made-with-foundation="">
-      <tr>
-        <td class="float-center" align="center" valign="top">
-          <center data-parsed="">
-            <table class="spacer float-center">
-              <tbody>
-                <tr>
-                  <td height="16px" style="font-size: 16px; line-height: 16px">
-                    &#xA0;
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <table align="center" class="container float-center">
-              <tbody>
-                <tr>
-                  <td>
-                    <table class="spacer">
-                      <tbody>
-                        <tr>
-                          <td
-                            height="16px"
-                            style="font-size: 16px; line-height: 16px"
-                          >
-                            &#xA0;
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <table class="row">
-                      <tbody>
-                        <tr>
-                          <th class="small-12 large-12 columns first last">
-                            <table>
-                              <tr>
-                                <th>
-                                  <h1>
-                                    Your Order Confirmation - [Order Number]
-                                  </h1>
-                                  <p>
-                                    We are thrilled to inform you that your
-                                    order has been successfully confirmed! Thank
-                                    you for choosing [Your E-commerce Website]
-                                    for your shopping needs.
-                                  </p>
-                                  <table class="spacer">
-                                    <tbody>
-                                      <tr>
-                                        <td
-                                          height="16px"
-                                          style="
+		</head>
+		<body>
+			<!-- <style> -->
+			<table class="body" data-made-with-foundation="">
+				<tr>
+					<td class="float-center" align="center" valign="top">
+						<center data-parsed="">
+							<table class="spacer float-center">
+								<tbody>
+									<tr>
+										<td height="16px" style="font-size: 16px; line-height: 16px">
+											&#xA0;
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table align="center" class="container float-center">
+								<tbody>
+									<tr>
+										<td>
+											<table class="spacer">
+												<tbody>
+													<tr>
+														<td
+															height="16px"
+															style="font-size: 16px; line-height: 16px"
+														>
+															&#xA0;
+														</td>
+													</tr>
+												</tbody>
+											</table>
+											<table class="row">
+												<tbody>
+													<tr>
+														<th class="small-12 large-12 columns first last">
+															<table>
+																<tr>
+																	<th>
+																		<h1>
+																			Order Cancellation - { payload.OrderId }
+																		</h1>
+																		<p>
+																			We regret to inform you that your recent
+																			order with Khushi Enterprises, Order
+																			Number { payload.OrderId }, has been cancelled.
+																		</p>
+																		<table class="spacer">
+																			<tbody>
+																				<tr>
+																					<td
+																						height="16px"
+																						style="
                                             font-size: 16px;
                                             line-height: 16px;
                                           "
-                                        >
-                                          &#xA0;
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                  <table class="callout">
-                                    <tr>
-                                      <th class="callout-inner secondary">
-                                        <table class="row">
-                                          <tbody>
-                                            <tr>
-                                              <th
-                                                class="small-12 large-6 columns first"
-                                              >
-                                                <table>
-                                                  <tr>
-                                                    <th>
-                                                      <p>
-                                                        <strong
-                                                          >Payment
-                                                          Method</strong
-                                                        ><br />
-                                                        Dubloons
-                                                      </p>
-                                                      <p>
-                                                        <strong
-                                                          >Email Address</strong
-                                                        ><br />
-                                                        thecapn@pirates.org
-                                                      </p>
-                                                      <p>
-                                                        <strong>Order ID</strong
-                                                        ><br />
-                                                        239235983749636
-                                                      </p>
-                                                    </th>
-                                                  </tr>
-                                                </table>
-                                              </th>
-                                              <th
-                                                class="small-12 large-6 columns last"
-                                              >
-                                                <table>
-                                                  <tr>
-                                                    <th>
-                                                      <p>
-                                                        <strong
-                                                          >Shipping
-                                                          Method</strong
-                                                        ><br />
-                                                        Boat (1&ndash;2
-                                                        weeks)<br />
-                                                        <strong
-                                                          >Shipping
-                                                          Address</strong
-                                                        ><br />
-                                                        Captain Price<br />
-                                                        123 Maple Rd<br />
-                                                        Campbell, CA 95112
-                                                      </p>
-                                                    </th>
-                                                  </tr>
-                                                </table>
-                                              </th>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </th>
-                                      <th class="expander"></th>
-                                    </tr>
-                                  </table>
-                                  <h4>Order Details</h4>
-                                  <table>
-                                    <tr>
-                                      <th>Item</th>
-                                      <th>#</th>
-                                      <th>Price</th>
-                                    </tr>
-                                    <tr>
-                                      <td>Ship's Cannon</td>
-                                      <td>2</td>
-                                      <td>$100</td>
-                                    </tr>
-                                    <tr>
-                                      <td>Ship's Cannon</td>
-                                      <td>2</td>
-                                      <td>$100</td>
-                                    </tr>
-                                    <tr>
-                                      <td>Ship's Cannon</td>
-                                      <td>2</td>
-                                      <td>$100</td>
-                                    </tr>
-                                    <tr>
-                                      <td colspan="2"><b>Subtotal:</b></td>
-                                      <td>$600</td>
-                                    </tr>
-                                    <tr>
-                                      <td colspan="2">
-                                        <b>Delivery Charge:</b>
-                                      </td>
-                                      <td>$600</td>
-                                    </tr>
-                                    <tr>
-                                      <td colspan="2">
-                                        <b>Discount:</b>
-                                      </td>
-                                      <td>$600</td>
-                                    </tr>
-                                    <tr>
-                                      <td colspan="2">
-                                        <b>Total:</b>
-                                      </td>
-                                      <td><b>$600</b></td>
-                                    </tr>
-                                  </table>
-                                  <hr />
-                                  <h4>What's Next?</h4>
-                                  <p>
-                                    Your order is now being processed and will
-                                    be delivered to you within 2-3 working days.
-                                    Our team is working diligently to ensure
-                                    that your products reach you safely and on
-                                    time.
-                                  </p>
-                                </th>
-                              </tr>
-                            </table>
-                          </th>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <table class="row footer text-center">
-                      <tbody>
-                        <tr>
-                          <th class="small-12 large-3 columns first">
-                            <table>
-                              <tr>
-                                <th>
-                                  <img
-                                    src="https://ecommerce-rohan-admin.s3.ap-south-1.amazonaws.com/icons8-shopaholic-color-96.png"
-                                    alt=""
-                                    height="50"
-                                  />
-                                </th>
-                              </tr>
-                            </table>
-                          </th>
-                          <th class="small-12 large-3 columns">
-                            <table>
-                              <tr>
-                                <th>
-                                  <p>
-                                    Call us at 800.555.1923<br />
-                                    Email us at support@discount.boat
-                                  </p>
-                                </th>
-                              </tr>
-                            </table>
-                          </th>
-                          <th class="small-12 large-3 columns last">
-                            <table>
-                              <tr>
-                                <th>
-                                  <p>
-                                    123 Maple Rd<br />
-                                    Campbell, CA 95112
-                                  </p>
-                                </th>
-                              </tr>
-                            </table>
-                          </th>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </center>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
+																					>
+																						&#xA0;
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																		<table class="callout">
+																			<tr>
+																				<th class="callout-inner secondary">
+																					<table class="row">
+																						<tbody>
+																							<tr>
+																								<th
+																									class="small-12 large-6 columns first"
+																								>
+																									<table>
+																										<tr>
+																											<th>
+																												<p>
+																													<strong>Order ID</strong>
+																													<br/>
+																													{ payload.OrderId }
+																												</p>
+																												<p>
+																													<strong>Payment Method</strong>
+																													<br/>
+																													Online
+																												</p>
+																											</th>
+																										</tr>
+																									</table>
+																								</th>
+																								<th
+																									class="small-12 large-6 columns last"
+																								>
+																									<table>
+																										<tr>
+																											<th>
+																												<p>
+																													<strong>
+																														Shipping
+																														Address
+																													</strong>
+																													<br/>
+																													{ payload.ShippingAddress }
+																												</p>
+																												<p>
+																													<strong>Email Address</strong>
+																													<br/>
+																													{ payload.Email }
+																												</p>
+																											</th>
+																										</tr>
+																									</table>
+																								</th>
+																							</tr>
+																						</tbody>
+																					</table>
+																				</th>
+																				<th class="expander"></th>
+																			</tr>
+																		</table>
+																		<h4>Order Details</h4>
+																		<table>
+																			<tr>
+																				<th>Item</th>
+																				<th>#</th>
+																				<th>Price</th>
+																			</tr>
+																			for _, product := range payload.Products {
+																				<tr>
+																					<td>{ product.Name }</td>
+																					<td>{ product.Quantity }</td>
+																					<td>{ product.Price }</td>
+																				</tr>
+																			}
+																			<tr>
+																				<td colspan="2"><b>Subtotal:</b></td>
+																				<td>{ payload.Subtotal }</td>
+																			</tr>
+																			<tr>
+																				<td colspan="2">
+																					<b>Delivery Charge:</b>
+																				</td>
+																				<td>{ payload.DeliveryTotal }</td>
+																			</tr>
+																			<tr>
+																				<td colspan="2">
+																					<b>Discount:</b>
+																				</td>
+																				<td>{ payload.DiscountAmt }</td>
+																			</tr>
+																			<tr>
+																				<td colspan="2">
+																					<b>Total:</b>
+																				</td>
+																				<td><b>{ payload.Total }</b></td>
+																			</tr>
+																		</table>
+																		<hr/>
+																		<h4>Refund Information</h4>
+																		<p>
+																			Any payment made for this order has been
+																			promptly refunded to the original payment
+																			method used during the checkout process.
+																			Please allow 2-3 working days for the refund
+																			to reflect in your account.
+																		</p>
+																	</th>
+																</tr>
+															</table>
+														</th>
+													</tr>
+												</tbody>
+											</table>
+											<table class="row footer text-center">
+												<tbody>
+													<tr>
+														<th class="small-12 large-3 columns first">
+															<table>
+																<tr>
+																	<th>
+																		<img
+																			src="https://ecommerce-rohan-admin.s3.ap-south-1.amazonaws.com/icons8-shopaholic-color-96.png"
+																			alt=""
+																			height="50"
+																		/>
+																	</th>
+																</tr>
+															</table>
+														</th>
+														<th class="small-12 large-3 columns">
+															<table>
+																<tr>
+																	<th>
+																		<p>
+																			Call us at 800-555-1923
+																			<br/>
+																			Email us at support@khushi-enterprises.com
+																		</p>
+																	</th>
+																</tr>
+															</table>
+														</th>
+														<th class="small-12 large-3 columns last">
+															<table>
+																<tr>
+																	<th>
+																		<p>
+																			3456, Roshanara Road
+																			<br/>
+																			Delhi-110007
+																		</p>
+																	</th>
+																</tr>
+															</table>
+														</th>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</center>
+					</td>
+				</tr>
+			</table>
+		</body>
+	</html>
+}

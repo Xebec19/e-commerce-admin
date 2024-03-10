@@ -36,7 +36,7 @@ type Querier interface {
 	RemoveImages(ctx context.Context, productID sql.NullInt32) error
 	UpdateCategoryById(ctx context.Context, arg UpdateCategoryByIdParams) error
 	UpdateOneProduct(ctx context.Context, arg UpdateOneProductParams) error
-	UpdateOrderStatus(ctx context.Context, arg UpdateOrderStatusParams) error
+	UpdateOrderStatus(ctx context.Context, arg UpdateOrderStatusParams) (Order, error)
 	UpdateProduct(ctx context.Context, arg UpdateProductParams) error
 }
 

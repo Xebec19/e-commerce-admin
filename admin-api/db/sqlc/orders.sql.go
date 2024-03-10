@@ -261,8 +261,8 @@ func (q *Queries) ReduceQuantity(ctx context.Context, arg ReduceQuantityParams) 
 	return err
 }
 
-const updateOrderStatus = `-- name: UpdateOrderStatus :exec
-update orders set status = $1 where order_id = $2
+const updateOrderStatus = `-- name: UpdateOrderStatus :one
+update orders set status = $1 where order_id = $2 returning order_id, user_id, price, delivery_price, total, status, created_on, billing_first_name, billing_last_name, billing_email, billing_address, shipping_first_name, shipping_last_name, shipping_email, shipping_address, billing_phone, shipping_phone, payment_id, transaction_signature, discount_amount, discount_code
 `
 
 type UpdateOrderStatusParams struct {
@@ -270,7 +270,31 @@ type UpdateOrderStatusParams struct {
 	OrderID string              `json:"order_id"`
 }
 
-func (q *Queries) UpdateOrderStatus(ctx context.Context, arg UpdateOrderStatusParams) error {
-	_, err := q.db.ExecContext(ctx, updateOrderStatus, arg.Status, arg.OrderID)
-	return err
+func (q *Queries) UpdateOrderStatus(ctx context.Context, arg UpdateOrderStatusParams) (Order, error) {
+	row := q.db.QueryRowContext(ctx, updateOrderStatus, arg.Status, arg.OrderID)
+	var i Order
+	err := row.Scan(
+		&i.OrderID,
+		&i.UserID,
+		&i.Price,
+		&i.DeliveryPrice,
+		&i.Total,
+		&i.Status,
+		&i.CreatedOn,
+		&i.BillingFirstName,
+		&i.BillingLastName,
+		&i.BillingEmail,
+		&i.BillingAddress,
+		&i.ShippingFirstName,
+		&i.ShippingLastName,
+		&i.ShippingEmail,
+		&i.ShippingAddress,
+		&i.BillingPhone,
+		&i.ShippingPhone,
+		&i.PaymentID,
+		&i.TransactionSignature,
+		&i.DiscountAmount,
+		&i.DiscountCode,
+	)
+	return i, err
 }

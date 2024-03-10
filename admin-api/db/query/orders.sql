@@ -31,8 +31,8 @@ join products p on p.product_id = od.product_id
 join categories c on p.category_id = c.category_id 
 where od.order_id = $1; 
 
--- name: UpdateOrderStatus :exec
-update orders set status = $1 where order_id = $2;
+-- name: UpdateOrderStatus :one
+update orders set status = $1 where order_id = $2 returning *;
 
 -- name: ReduceQuantity :exec
 update products set quantity = GREATEST(0,quantity - $1) where product_id = $2;

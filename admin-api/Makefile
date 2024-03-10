@@ -4,4 +4,7 @@ sqlc:
 debug:
 	air -c .air.toml
 
-.PHONY: sqlc air
+templates:
+	templ generate
+
+.PHONY: sqlc air templates
