@@ -5,7 +5,7 @@ import (
 	"log"
 	"mime/multipart"
 
-	"github.com/Xebec19/e-commerce-admin/admin-api/util"
+	"github.com/Xebec19/e-commerce-admin/admin-api/internal/util"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"

@@ -3,14 +3,14 @@ package main
 import (
 	"log"
 
-	"github.com/Xebec19/e-commerce-admin/admin-api/auth"
-	"github.com/Xebec19/e-commerce-admin/admin-api/category"
-	"github.com/Xebec19/e-commerce-admin/admin-api/cloud"
 	db "github.com/Xebec19/e-commerce-admin/admin-api/db/sqlc"
-	"github.com/Xebec19/e-commerce-admin/admin-api/order"
-	"github.com/Xebec19/e-commerce-admin/admin-api/product"
-	"github.com/Xebec19/e-commerce-admin/admin-api/user"
-	"github.com/Xebec19/e-commerce-admin/admin-api/util"
+	"github.com/Xebec19/e-commerce-admin/admin-api/internal/auth"
+	"github.com/Xebec19/e-commerce-admin/admin-api/internal/category"
+	"github.com/Xebec19/e-commerce-admin/admin-api/internal/cloud"
+	"github.com/Xebec19/e-commerce-admin/admin-api/internal/order"
+	"github.com/Xebec19/e-commerce-admin/admin-api/internal/product"
+	"github.com/Xebec19/e-commerce-admin/admin-api/internal/user"
+	"github.com/Xebec19/e-commerce-admin/admin-api/internal/util"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -30,11 +30,11 @@ func main() {
 
 	db.Connect()
 	cloud.NewAWS()
-	cloud.NewEmailClient()
+	cloud.Email.NewEmailClient()
 
 	auth.SetRoute(app)
 
-	app.Use(util.JwtValidate)
+	app.Use(JwtValidate)
 
 	order.SetRoute(app)
 	user.SetRoute(app)

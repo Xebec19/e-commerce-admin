@@ -1,8 +1,8 @@
 # .air.toml
-root = "."
+root = "cmd/web"
 tmp_dir = "tmp"
 [build]
-  cmd = "go build -o ./tmp/main ."
+  cmd = "go build -o ./tmp/main ./cmd/web"
   bin = "./tmp/main"
   delay = 1000 # ms
   exclude_dir = ["assets", "tmp", "vendor"]
