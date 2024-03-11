@@ -31,6 +31,7 @@ func main() {
 	db.Connect()
 	cloud.NewAWS()
 	cloud.Email.NewEmailClient()
+	cloud.SearchIndexInit(config.Algolia_Application, config.Algolia_Write_Key, config.Algolia_Index)
 
 	auth.SetRoute(app)
 

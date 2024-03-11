@@ -22,6 +22,7 @@ require (
 )
 
 require (
+	github.com/algolia/algoliasearch-client-go/v3 v3.31.1
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/google/uuid v1.5.0 // indirect
