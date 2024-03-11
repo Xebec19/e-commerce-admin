@@ -47,6 +47,8 @@ func deleteProduct(c *fiber.Ctx) error {
 
 	db.DBQuery.DeleteOneProduct(c.Context(), int32(productId))
 
+	go cloud.RemoveProduct(productId)
+
 	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(nil, "product deleted"))
 	return nil
 }
@@ -116,10 +118,6 @@ func createProduct(c *fiber.Ctx) error {
 		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
 		return err
 	}
-	if err != nil {
-		c.Status(fiber.StatusBadRequest).JSON(util.ErrorResponse(err))
-		return err
-	}
 
 	argv2 := db.CreateProductImageParams{
 		ProductID:  sql.NullInt32{Int32: product.ProductID, Valid: true},
@@ -140,6 +138,8 @@ func createProduct(c *fiber.Ctx) error {
 
 		db.DBQuery.CreateProductImage(c.Context(), argv3)
 	}
+
+	go cloud.SaveProduct(int(product.ProductID))
 
 	c.Status(fiber.StatusOK).JSON(util.SuccessResponse(product, "product created"))
 	return nil
