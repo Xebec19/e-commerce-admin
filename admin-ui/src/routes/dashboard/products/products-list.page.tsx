@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import useSWR from "swr";
 
 export default function ProductList() {
-  const { data: products, error } = useSWR(["product/list"], () =>
+  const { data: products, error } = useSWR("product/list", () =>
     getProductAPI()
   );
 
@@ -36,7 +36,7 @@ export default function ProductList() {
       <DataTable
         columns={columns}
         data={products ?? []}
-        searchableCol="category_name"
+        searchableCol="product_name"
       />
     </div>
   );

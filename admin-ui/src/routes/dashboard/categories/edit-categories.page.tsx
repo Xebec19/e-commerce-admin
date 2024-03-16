@@ -10,7 +10,7 @@ import { z } from "zod";
 export default function EditCategoryPage() {
   const { id = "0" } = useParams();
   const { toast } = useToast();
-  const { data } = useSWR(!isNaN(+id) ? ["category", id] : null, () =>
+  const { data } = useSWR(!isNaN(+id) ? "category" + id : null, () =>
     getCategoryByIdAPI(id)
   );
   const { mutate } = useSWRConfig();
@@ -30,6 +30,7 @@ export default function EditCategoryPage() {
       navigate("/dashboard/category");
 
       mutate("category/list");
+      mutate("category" + id);
     } catch (error: unknown) {
       console.error({ error });
       toast({

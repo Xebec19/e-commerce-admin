@@ -14,7 +14,7 @@ export default function CategoryList() {
       <div className="flex space-x-2 items-center">
         <h1 className="font-semibold text-lg">Categories</h1>
         <Link to={"create"}>
-          <Button size={"icon"} variant={"outline"}>
+          <Button size={"icon"}>
             <Plus className="h-4 w-4" />
           </Button>
         </Link>
