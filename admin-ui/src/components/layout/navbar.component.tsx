@@ -1,4 +1,3 @@
-import logo from "@/assets/icons8-shopaholic-color-32.png";
 import { APP_NAME } from "@/lib/environments";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
@@ -20,7 +19,13 @@ export default function Navbar() {
     >
       <Link to={"/dashboard"} className="flex items-center">
         <div className="mr-2">
-          <img src={logo} alt="logo" />
+          <img
+            src={
+              "https://ecommerce-rohan-admin.s3.ap-south-1.amazonaws.com/khushi-logo1.png"
+            }
+            alt="logo"
+            className="w-8 h-8 rounded-md"
+          />
         </div>
         <span>{appName}</span>
       </Link>

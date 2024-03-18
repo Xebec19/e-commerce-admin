@@ -1,4 +1,4 @@
-import ZodProduct from "@/schema/product.schema";
+import { ZodProduct } from "@/schema/product.schema";
 import { z } from "zod";
 
 export type LoginFormType = {
