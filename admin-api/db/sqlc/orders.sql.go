@@ -197,7 +197,7 @@ func (q *Queries) ReadOrderItems(ctx context.Context, orderID sql.NullString) ([
 const readOrders = `-- name: ReadOrders :many
 select o.order_id, concat(u.first_name, ' ', u.last_name) as user_name, u.email,
 o.price, o.delivery_price, o.total, o.status, o.created_on, o.discount_amount, o.discount_code 
-from orders o join users u on o.user_id = u.user_id
+from orders o join users u on o.user_id = u.user_id order by o.created_on desc
 `
 
 type ReadOrdersRow struct {

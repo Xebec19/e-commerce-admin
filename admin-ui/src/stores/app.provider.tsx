@@ -1,9 +1,11 @@
+import LocalStorage from "@/lib/local-storage.util";
 import { RootState } from "@/types/store.type";
 import { createContext, useReducer, ReactNode, useContext } from "react";
 
 const initialState: RootState = {
   isLoggedIn: false,
   handleLogin: () => {},
+  handleLogout: () => {},
 };
 
 const actions = {
@@ -20,6 +22,7 @@ const reducerFn = (
       return { ...state, isLoggedIn: true };
     }
     case actions.userLoggedOut: {
+      LocalStorage.token = "";
       return { ...state, isLoggedIn: false };
     }
     default:
@@ -30,6 +33,7 @@ const reducerFn = (
 const AppContext = createContext<RootState>({
   isLoggedIn: false,
   handleLogin: () => {},
+  handleLogout: () => {},
 });
 
 export default function AppProvider({ children }: { children: ReactNode }) {
@@ -39,8 +43,12 @@ export default function AppProvider({ children }: { children: ReactNode }) {
     dispatch({ type: actions.userLoggedIn });
   };
 
+  const handleLogout = () => {
+    dispatch({ type: actions.userLoggedOut });
+  };
+
   return (
-    <AppContext.Provider value={{ ...values, handleLogin }}>
+    <AppContext.Provider value={{ ...values, handleLogin, handleLogout }}>
       {children}
     </AppContext.Provider>
   );
