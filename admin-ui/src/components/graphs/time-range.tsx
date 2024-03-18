@@ -25,7 +25,7 @@ const TimeRange = ({ data, months }: ITimeRangeProps) => {
       from={format(subMonths(new Date(), months), "yyyy-MM-dd")}
       to={format(new Date(), "yyyy-MM-dd")}
       emptyColor="lightgrey"
-      colors={["#61cdbb", "#97e3d5", "#e8c1a0", "#f47560"]}
+      colors={["#88CC88", "#55AA55", "#116611", "#004400"]}
       margin={{ top: 40, right: 40, bottom: 100, left: 40 }}
       dayBorderWidth={2}
       dayBorderColor="grey"

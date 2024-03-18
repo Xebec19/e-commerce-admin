@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import * as environment from "../environments";
+import LocalStorage from "../local-storage.util";
 
 const config = {
   baseURL: environment.BASE_URL,
@@ -35,9 +36,9 @@ requestAPI.interceptors.response.use(
     console.error({ error });
     if (error.response && error.response.status === 401) {
       if (typeof window !== "undefined") {
-        localStorage.clear();
+        LocalStorage.token = "";
 
-        window.location.replace("/auth/login");
+        window.location.replace("/");
       }
     }
     return Promise.reject(error);

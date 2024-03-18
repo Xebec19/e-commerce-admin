@@ -7,6 +7,7 @@ export default function OrderList() {
   const { data: orders = [], error } = useSWR("order-list", fetchOrders);
 
   if (error) {
+    console.log({ error });
     return (
       <div className="p-4">
         <span className="text-red-500">
@@ -20,7 +21,11 @@ export default function OrderList() {
     <div className="p-4 space-y-4">
       <h1 className="font-semibold text-lg">Orders</h1>
 
-      <DataTable columns={columns} data={orders} searchableCol="userName" />
+      <DataTable
+        columns={columns}
+        data={orders ?? []}
+        searchableCol="userName"
+      />
     </div>
   );
 }

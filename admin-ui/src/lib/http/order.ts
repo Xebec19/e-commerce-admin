@@ -70,7 +70,7 @@ export async function fetchOrders() {
       createdOn: o.created_on.Time,
       discountAmount: o.discount_amount.Int32,
       discountCode: o.discount_code.String,
-    }))
+    })) || []
   );
 }
 
