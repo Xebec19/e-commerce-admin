@@ -1,8 +1,8 @@
+import MobileNavbar from "@/components/layout/mobile-navbar.component";
 import Navbar from "@/components/layout/navbar.component";
 import Sidebar from "@/components/layout/sidebar.component";
 import { Toaster } from "@/components/ui/toaster";
-import { LayoutDashboard } from "lucide-react";
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 export default function DashboardRoot() {
   return (
@@ -10,10 +10,10 @@ export default function DashboardRoot() {
       <Sidebar />
       <div className="flex flex-col">
         <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b px-6 ">
-          <Link className="lg:hidden" to={"/"}>
-            <LayoutDashboard className="h-6 w-6" />
-            <span className="sr-only">Home</span>
-          </Link>
+          <div className="md:hidden">
+            <MobileNavbar />
+          </div>
+
           <div className="flex-1">
             <Navbar />
           </div>
