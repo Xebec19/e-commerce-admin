@@ -120,7 +120,7 @@ INSERT INTO products
   
 -- password is password123
 INSERT INTO public.users (first_name,last_name,email,phone,"password",created_on,updated_on,status,"access") VALUES
-	 ('Rohan','Thakur','rohan@gmail.com','7291003805','$2a$10$8d9bYVxTafPrNRGi3qh0nelvdooi4hIojo/z/qv4M0s8rovtvjJga','2023-11-22 15:05:16.154278+05:30','2023-11-22 15:05:16.154278+05:30','active','user');
+	 ('Rohan','Thakur','rohan@gmail.com','7291003805','$2a$10$1xNyHjuFGz0u0T5BNeEG9.FYKp6gd9uH/hZHcFpnEej/GxBN3BQbG','2023-11-22 15:05:16.154278+05:30','2023-11-22 15:05:16.154278+05:30','active','admin');
 
 insert into product_images(product_id, image_url, updated_by, is_featured)
 select product_id, 

@@ -28,7 +28,7 @@ func login(c *fiber.Ctx) error {
 	// Find a user with given email
 	user, err := db.DBQuery.FindAdminUser(context.Background(), req.Email)
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(util.ErrorResponse(errors.New("no user found")))
+		return c.Status(fiber.StatusNotFound).JSON(util.ErrorResponse(err))
 	}
 
 	// decode base64 hash
